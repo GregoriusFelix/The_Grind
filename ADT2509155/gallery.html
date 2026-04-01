@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Daily Grind – Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet" />
+  <!-- External CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Top branding bar -->
+  <div class="top-bar">
+    <a href="index.html">THE DAILY GRIND</a>
+    <span>Coffee &amp; Kitchen · Est. 2010</span>
+  </div>
+
+  <!-- Navigation - Gallery is active -->
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <span class="nav-sep">|</span>
+    <a href="menu.html">Menu</a>
+    <span class="nav-sep">|</span>
+    <a href="about.html">About</a>
+    <span class="nav-sep">|</span>
+    <a href="gallery.html" class="active">Gallery</a>
+    <span class="nav-sep">|</span>
+    <a href="order.html">Order</a>
+    <span class="nav-sep">|</span>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <p class="eyebrow">Visual Tour</p>
+    <h1>Our Gallery</h1>
+    <p class="sub">Dishes · Ambience · Moments</p>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- Gallery Section -->
+  <section class="gallery-section">
+    <p class="section-label">Visual Tour</p>
+    <h2 class="section-title">The Daily Grind Experience</h2>
+    <div class="gold-bar" style="margin-bottom:60px;"></div>
+
+    <!-- Gallery HTML table (Assignment 2 requirement maintained) -->
+    <table class="gallery-table">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Item / Scene</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><img src="images/cafepic.png" alt="Cafe Interior" class="gallery-img"/></td>
+          <td>
+            <div class="gallery-item-name">Cafe Interior</div>
+            <div class="gallery-item-type">Atmosphere</div>
+          </td>
+          <td><span class="gallery-status status-available">Ambience</span></td>
+          <td class="gallery-item-desc">Warm wooden furniture, exposed brick and soft lighting create an inviting atmosphere.</td>
+          <td class="gallery-price">—</td>
+          <td><span class="gallery-status status-available">Always Open</span></td>
+        </tr>
+
+        <tr>
+          <td><img src="images/barista.png" alt="Barista at work" class="gallery-img"/></td>
+          <td>
+            <div class="gallery-item-name">Latte Art</div>
+            <div class="gallery-item-type">Signature Drink</div>
+          </td>
+          <td><span class="gallery-status status-popular">Popular</span></td>
+          <td class="gallery-item-desc">Our baristas craft each cup with precision. Velvety microfoam over a double ristretto.</td>
+          <td class="gallery-price">RM 12.00</td>
+          <td><span class="gallery-status status-available">Available</span></td>
+        </tr>
+
+        <tr>
+          <td><img src="images/avocadotoast.png" alt="Avocado Toast" class="gallery-img"/></td>
+          <td>
+            <div class="gallery-item-name">Smashed Avocado</div>
+            <div class="gallery-item-type">Breakfast</div>
+          </td>
+          <td><span class="gallery-status status-popular">Bestseller</span></td>
+          <td class="gallery-item-desc">Artisan sourdough topped with fresh avocado, a perfect poached egg and chilli flakes.</td>
+          <td class="gallery-price">RM 24.00</td>
+          <td><span class="gallery-status status-available">Available</span></td>
+        </tr>
+
+        <tr>
+          <td><img src="images/pastrie.png" alt="Morning Pastries" class="gallery-img"/></td>
+          <td>
+            <div class="gallery-item-name">Morning Pastries</div>
+            <div class="gallery-item-type">Bakery</div>
+          </td>
+          <td><span class="gallery-status status-available">Daily Fresh</span></td>
+          <td class="gallery-item-desc">Buttery croissants and seasonal tarts baked fresh each morning by our in-house pastry team.</td>
+          <td class="gallery-price">RM 9.00</td>
+          <td><span class="gallery-status status-available">Available</span></td>
+        </tr>
+
+        <tr>
+          <td><img src="images/talks.png" alt="Outdoor Seating" class="gallery-img"/></td>
+          <td>
+            <div class="gallery-item-name">Outdoor Seating</div>
+            <div class="gallery-item-type">Atmosphere</div>
+          </td>
+          <td><span class="gallery-status status-available">Ambience</span></td>
+          <td class="gallery-item-desc">Al fresco dining surrounded by greenery, perfect for a relaxed morning catch-up.</td>
+          <td class="gallery-price">—</td>
+          <td><span class="gallery-status status-available">Weather Permit</span></td>
+        </tr>
+
+        <tr>
+          <td><img src="images/indoor.png" alt="Evening Ambience" class="gallery-img"/></td>
+          <td>
+            <div class="gallery-item-name">Evening Ambience</div>
+            <div class="gallery-item-type">Atmosphere</div>
+          </td>
+          <td><span class="gallery-status status-popular">Must See</span></td>
+          <td class="gallery-item-desc">Candle-lit evenings transform The Daily Grind into a romantic and relaxed dinner setting.</td>
+          <td class="gallery-price">—</td>
+          <td><span class="gallery-status status-available">Nightly</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <h3 class="footer-brand">THE DAILY GRIND</h3>
+    <p class="footer-tagline">Coffee &amp; Kitchen</p>
+    <div class="footer-grid">
+      <div>
+        <p class="footer-col-label">Address</p>
+        <p>Xiamen University Malaysia<br/>Jalan Sunsuria, Bandar Sunsuria<br/>43900 Sepang, Selangor</p>
+      </div>
+      <div>
+        <p class="footer-col-label">Contact</p>
+        <p>+60 3-1234 5678<br/><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0a626f6666654a6e6b6366736d7863646e246773">[email&#160;protected]</a></p>
+      </div>
+      <div>
+        <p class="footer-col-label">Hours</p>
+        <p>Mon – Fri: 7am – 9pm<br/>Saturday: 8am – 10pm<br/>Sunday: 9am – 7pm</p>
+      </div>
+      <div>
+        <p class="footer-col-label">Follow Us</p>
+        <p class="footer-links">
+          <a href="#">Facebook</a>
+          <a href="#">Instagram</a>
+          <a href="#">Twitter</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-rule"></div>
+    <p class=

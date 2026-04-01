@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta and title -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Daily Grind – Home</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet" />
+
+  <!-- External CSS (Assignment 3 requirement) -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Embedded CSS: creative enhancements on top of external stylesheet -->
+  <style>
+
+    /* ── Animated grain overlay on hero ── */
+    @keyframes grain {
+      0%, 100% { transform: translate(0, 0); }
+      10%       { transform: translate(-2%, -3%); }
+      30%       { transform: translate(3%, 2%); }
+      50%       { transform: translate(-1%, 4%); }
+      70%       { transform: translate(4%, -2%); }
+      90%       { transform: translate(-3%, 1%); }
+    }
+    .hero-grain {
+      position: absolute;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      opacity: 0.18;
+      animation: grain 8s steps(1) infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Floating decorative coffee rings ── */
+    @keyframes floatRing {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.07; }
+      50%       { transform: translateY(-18px) rotate(8deg); opacity: 0.13; }
+    }
+    .hero-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold-light);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .hero-ring-1 { width: 180px; height: 180px; bottom: 14%; left: 8%; animation: floatRing 7s ease-in-out infinite; }
+    .hero-ring-2 { width: 100px; height: 100px; top: 20%; right: 12%; animation: floatRing 9s ease-in-out infinite 1.5s; }
+    .hero-ring-3 { width: 60px;  height: 60px;  top: 35%; left: 18%; animation: floatRing 6s ease-in-out infinite 3s; }
+    .hero-ring-4 { width: 220px; height: 220px; top: 10%; right: 5%; animation: floatRing 11s ease-in-out infinite 2s; }
+
+    /* ── Diagonal texture strip between hero and nav ── */
+    .hero-edge {
+      height: 4px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--gold)      0px,
+        var(--gold)      6px,
+        transparent      6px,
+        transparent      14px
+      );
+      opacity: 0.5;
+    }
+
+    /* ── Enhanced hero marquee ticker ── */
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .hero-ticker {
+      background: var(--gold);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 12px 0;
+    }
+    .hero-ticker-inner {
+      display: inline-block;
+      animation: ticker 28s linear infinite;
+    }
+    .hero-ticker-inner span {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--brown-dark);
+      margin: 0 32px;
+    }
+    .hero-ticker-dot {
+      display: inline-block;
+      width: 4px; height: 4px;
+      background: var(--brown-dark);
+      border-radius: 50%;
+      vertical-align: middle;
+      margin: 0 8px;
+      opacity: 0.5;
+    }
+
+    /* ── Welcome strip enhancements ── */
+    .hero-strip-enhanced {
+      position: relative;
+      background: var(--warm-bg);
+      padding: 100px 40px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-strip-enhanced::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Playfair Display', serif;
+      font-size: 280px;
+      color: rgba(200,169,110,0.05);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .strip-inner { position: relative; z-index: 2; max-width: 780px; margin: 0 auto; }
+
+    /* ── Animated counter numbers ── */
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid #ecddc5;
+      border-top: 3px solid var(--gold);
+      padding: 32px 24px;
+      text-align: center;
+      border-radius: 3px;
+      box-shadow: 0 4px 24px rgba(43,29,14,0.07);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      min-width: 140px;
+    }
+    .stat-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(43,29,14,0.13);
+    }
+    .stat-card-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--brown-dark);
+      line-height: 1;
+    }
+    .stat-card-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+      margin-top: 8px;
+    }
+    .stats-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin: 50px 0 0;
+    }
+
+    /* ── Full-bleed dark "philosophy" band ── */
+    .philosophy-band {
+      background: var(--brown-dark);
+      padding: 90px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .philosophy-band::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border: 1px solid rgba(200,169,110,0.12);
+      pointer-events: none;
+    }
+    .philosophy-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.3;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    .philosophy-quote em { color: var(--gold-light); font-style: normal; }
+    .philosophy-attr {
+      font-size: 10px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: rgba(200,169,110,0.55);
+      margin-top: 24px;
+    }
+
+    /* ── Promo table enhancements (row hover glow) ── */
+    .promo-table tbody tr {
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+    .promo-table tbody tr:hover {
+      background: rgba(200,169,110,0.06);
+    }
+
+    /* ── Feature pills row ── */
+    .feature-pills { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 32px 0 40px; }
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--gold-light);
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--brown-mid);
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    }
+    .pill:hover { background: var(--gold); color: var(--brown-dark); border-color: var(--gold); }
+    .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+    /* ── Staggered card reveal animations ── */
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .join-card { opacity: 0; animation: cardReveal 0.7s ease forwards; }
+    .join-card:nth-child(1) { animation-delay: 0.1s; }
+    .join-card:nth-child(2) { animation-delay: 0.25s; }
+    .join-card:nth-child(3) { animation-delay: 0.4s; }
+
+    /* ── Scroll-triggered fade (JS controlled) ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Seasonal badge on promo table ── */
+    .seasonal-badge {
+      display: inline-block;
+      background: var(--green);
+      color: #fff;
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 2px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── Back-to-top button ── */
+    #back-top {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 44px;
+      height: 44px;
+      background: var(--brown-dark);
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      border-radius: 3px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 800;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
+      transform: translateY(10px);
+    }
+    #back-top.show { opacity: 1; transform: translateY(0); }
+    #back-top:hover { background: var(--gold); color: var(--brown-dark); }
+
+    /* ── Countdown timer ── */
+    .countdown-wrap {
+      background: var(--cream);
+      border: 1px solid #ecddc5;
+      border-radius: 4px;
+      padding: 28px 36px;
+      display: inline-flex;
+      gap: 32px;
+      margin: 20px auto 0;
+      box-shadow: 0 4px 20px rgba(43,29,14,0.06);
+    }
+    .cd-unit { text-align: center; }
+    .cd-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--brown-dark);
+      line-height: 1;
+    }
+    .cd-label {
+      font-size: 8px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .cd-sep {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      color: var(--gold);
+      opacity: 0.4;
+      align-self: flex-start;
+      line-height: 1;
+    }
+
+    /* ── Announcement bar ── */
+    .announce-bar {
+      background: var(--green);
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: rgba(253,245,230,0.92);
+    }
+    .announce-bar strong { color: var(--gold-light); }
+
+    /* ── Testimonials ── */
+    .testimonial-section {
+      background: #fff;
+      padding: 100px 40px;
+      text-align: center;
+    }
+    .testimonial-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      justify-content: center;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .testimonial-card {
+      background: var(--warm-bg);
+      border: 1px solid #ecddc5;
+      border-radius: 4px;
+      padding: 36px 32px;
+      width: 280px;
+      text-align: left;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(43,29,14,0.10);
+    }
+    .testimonial-card::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 80px;
+      color: var(--gold);
+      opacity: 0.2;
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      line-height: 1;
+    }
+    .testimonial-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-style: italic;
+      color: var(--brown-dark);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .testimonial-author {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .testimonial-stars { color: var(--gold); font-size: 12px; margin-bottom: 10px; letter-spacing: 3px; }
+
+    /* ── Hover shimmer on CTA buttons ── */
+    @keyframes shimmer {
+      0%   { left: -100%; }
+      100% { left: 200%; }
+    }
+    .btn-primary, .header-cta {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::after, .header-cta::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+      transition: none;
+      pointer-events: none;
+    }
+    .btn-primary:hover::after, .header-cta:hover::after {
+      animation: shimmer 0.6s ease forwards;
+    }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 600px) {
+      .countdown-wrap { gap: 16px; padding: 20px; }
+      .cd-num { font-size: 28px; }
+      .philosophy-quote { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── ANNOUNCEMENT BAR ─── -->
+  <div class="announce-bar">
+    ✦ <strong>Happy Hour:</strong> 3pm – 5pm daily · Buy 1 coffee, get 1 at 50% off &nbsp;·&nbsp; <strong>Dine-in only</strong> ✦
+  </div>
+
+  <!-- ===================== HEADER / HERO ===================== -->
+  <header id="home" class="site-header">
+
+    <!-- Animated grain texture -->
+    <div class="hero-grain"></div>
+
+    <!-- Floating decorative rings -->
+    <div class="hero-ring hero-ring-1"></div>
+    <div class="hero-ring hero-ring-2"></div>
+    <div class="hero-ring hero-ring-3"></div>
+    <div class="hero-ring hero-ring-4"></div>
+
+    <div class="header-content">
+
+      <!-- inline CSS style 1 of 3: SVG container margin -->
+      <div style="margin-bottom: 18px;">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="26" cy="40" rx="17" ry="4.5" fill="#c8a96e" opacity="0.25"/>
+          <path d="M9 17h28l-4 17H13L9 17Z" fill="#c8a96e" stroke="#e8d5a3" stroke-width="1.5"/>
+          <path d="M37 21h4a5 5 0 0 1 0 10h-4" stroke="#e8d5a3" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M19 10 Q21 6 23 10 Q25 14 27 10" stroke="#e8d5a3" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <p class="header-eyebrow">Est. 2010 &nbsp;·&nbsp; Coffee &amp; Kitchen</p>
+      <h1 class="header-title">The <em>Daily</em><br/>Grind</h1>
+      <p class="header-subtitle">Cafe &nbsp;·&nbsp; Restaurant &nbsp;·&nbsp; Community</p>
+
+      <div class="header-divider">
+        <span></span>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8 3.3 12.5l1.4-4.3L1 5.5h4.5Z" fill="#c8a96e"/>
+        </svg>
+        <span></span>
+      </div>
+
+      <a href="menu.html" class="header-cta">Explore Our Menu</a>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </header>
+
+  <!-- ── Moving ticker below hero ── -->
+  <div class="hero-ticker" aria-hidden="true">
+    <div class="hero-ticker-inner">
+      <span>Artisan Coffee</span><span class="hero-ticker-dot"></span>
+      <span>Fresh Baked Daily</span><span class="hero-ticker-dot"></span>
+      <span>Locally Sourced</span><span class="hero-ticker-dot"></span>
+      <span>Est. 2010</span><span class="hero-ticker-dot"></span>
+      <span>Community Hub</span><span class="hero-ticker-dot"></span>
+      <span>Seasonal Menus</span><span class="hero-ticker-dot"></span>
+      <span>Free-Range &amp; Organic</span><span class="hero-ticker-dot"></span>
+      <!-- duplicate for seamless loop -->
+      <span>Artisan Coffee</span><span class="hero-ticker-dot"></span>
+      <span>Fresh Baked Daily</span><span class="hero-ticker-dot"></span>
+      <span>Locally Sourced</span><span class="hero-ticker-dot"></span>
+      <span>Est. 2010</span><span class="hero-ticker-dot"></span>
+      <span>Community Hub</span><span class="hero-ticker-dot"></span>
+      <span>Seasonal Menus</span><span class="hero-ticker-dot"></span>
+      <span>Free-Range &amp; Organic</span><span class="hero-ticker-dot"></span>
+    </div>
+  </div>
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <!-- Each nav item links to its own separate HTML page (Assignment 3 requirement) -->
+  <nav class="site-nav">
+    <a href="index.html" class="active">Home</a>
+    <span class="nav-sep">|</span>
+    <a href="menu.html">Menu</a>
+    <span class="nav-sep">|</span>
+    <a href="about.html">About</a>
+    <span class="nav-sep">|</span>
+    <a href="gallery.html">Gallery</a>
+    <span class="nav-sep">|</span>
+    <a href="order.html">Order</a>
+    <span class="nav-sep">|</span>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <!-- ===================== WELCOME STRIP ===================== -->
+  <section class="hero-strip-enhanced reveal">
+    <div class="strip-inner">
+      <p class="section-label">Welcome</p>
+      <div class="gold-bar"></div>
+      <h2 class="section-title">Your Neighbourhood<br/>Coffee Sanctuary</h2>
+      <p class="hero-body">
+        Nestled in the heart of the city, <strong>The Daily Grind</strong> is a warm
+        sanctuary for exceptional coffee, wholesome breakfasts, and satisfying
+        lunches. Every dish is crafted from locally sourced ingredients. Because
+        great food starts with great people and a great community.
+      </p>
+
+      <div class="feature-pills">
+        <div class="pill"><span class="pill-dot"></span> Locally Sourced</div>
+        <div class="pill"><span class="pill-dot"></span> Artisan Coffee</div>
+        <div class="pill"><span class="pill-dot"></span> Daily Specials</div>
+        <div class="pill"><span class="pill-dot"></span> Community Hub</div>
+      </div>
+
+      <a href="menu.html" class="btn-primary">Discover Our Menu</a>
+    </div>
+
+    <!-- Live stat cards below welcome text -->
+    <div class="stats-grid reveal">
+      <div class="stat-card">
+        <div class="stat-card-num" data-target="14">0</div>
+        <div class="stat-card-label">Years Open</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" data-target="50">0</div>
+        <div class="stat-card-label">Thousand Guests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" data-target="100">0</div>
+        <div class="stat-card-label">% Local Produce</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" data-target="12">0</div>
+        <div class="stat-card-label">Menu Specials</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PHILOSOPHY BAND ===================== -->
+  <div class="philosophy-band reveal">
+    <p class="section-label" style="display:block; color:var(--gold);">Our Philosophy</p>
+    <blockquote class="philosophy-quote">
+      "Every cup is a conversation.<br/>Every meal, a <em>memory</em>."
+    </blockquote>
+    <p class="philosophy-attr">— Davin Lim, Founder · The Daily Grind</p>
+  </div>
+
+  <!-- ===================== PROMOTION MENU SECTION ===================== -->
+  <!-- Requirement: 6+ menus in HTML table, old & new price, clickable to Order page -->
+  <section id="promotions" class="promo-section reveal">
+    <p class="section-label" style="display:block; text-align:center;">Limited Time</p>
+    <h2 class="section-title">Promotion Menu</h2>
+    <div class="gold-bar"></div>
+    <p class="promo-note">
+      Savour our handpicked promotional favourites at special prices — available for a limited time only.
+      Click any item to go straight to our ordering page.
+    </p>
+
+    <!-- Countdown timer for promotions -->
+    <div style="text-align:center; margin-bottom: 48px;">
+      <p style="font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--brown-mid); margin-bottom:14px;">Offer Ends In</p>
+      <div class="countdown-wrap">
+        <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-label">Days</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-label">Hours</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-label">Mins</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-label">Secs</div></div>
+      </div>
+    </div>
+
+    <!-- HTML Table for Promotion Menu (Assignment 3 requirement) -->
+    <div class="promo-table-wrap">
+      <table class="promo-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Was / Now</th>
+            <th>Savings</th>
+            <th>Order</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Promo item 1 -->
+          <tr>
+            <td>
+              <div class="promo-item-name">Smashed Avocado Toast <span class="seasonal-badge">New</span></div>
+              <div class="promo-item-cat">Breakfast</div>
+            </td>
+            <td style="font-size:13px; color:#5a4a35; max-width:220px;">Sourdough, avocado, poached egg, chilli flakes &amp; lemon zest.</td>
+            <td><span class="promo-badge">Breakfast</span></td>
+            <td>
+              <div class="promo-old-price">RM 24.00</div>
+              <div class="promo-new-price">RM 18.00</div>
+            </td>
+            <td style="font-size:13px; font-weight:700; color:#c0392b;">Save RM 6</td>
+            <td><a href="order.html" class="promo-order-btn">Order Now</a></td>
+          </tr>
+
+          <!-- Promo item 2 -->
+          <tr>
+            <td>
+              <div class="promo-item-name">The Big Breakfast</div>
+              <div class="promo-item-cat">Breakfast</div>
+            </td>
+            <td style="font-size:13px; color:#5a4a35; max-width:220px;">Eggs your way, turkey bacon, beans, sautéed mushrooms &amp; toast.</td>
+            <td><span class="promo-badge">Breakfast</span></td>
+            <td>
+              <div class="promo-old-price">RM 32.00</div>
+              <div class="promo-new-price">RM 24.00</div>
+            </td>
+            <td style="font-size:13px; font-weight:700; color:#c0392b;">Save RM 8</td>
+            <td><a href="order.html" class="promo-order-btn">Order Now</a></td>
+          </tr>
+
+          <!-- Promo item 3 -->
+          <tr>
+            <td>
+              <div class="promo-item-name">Grilled Herb Chicken <span class="seasonal-badge">Chef's Pick</span></div>
+              <div class="promo-item-cat">Lunch</div>
+            </td>
+            <td style="font-size:13px; color:#5a4a35; max-width:220px;">Free-range chicken, roasted vegetables, lemon butter &amp; mash.</td>
+            <td><span class="promo-badge" style="background:rgba(92,122,90,0.12); color:#3d5c3b;">Lunch</span></td>
+            <td>
+              <div class="promo-old-price">RM 38.00</div>
+              <div class="promo-new-price">RM 29.00</div>
+            </td>
+            <td style="font-size:13px; font-weight:700; color:#c0392b;">Save RM 9</td>
+            <td><a href="order.html" class="promo-order-btn">Order Now</a></td>
+          </tr>
+
+          <!-- Promo item 4 -->
+          <tr>
+            <td>
+              <div class="promo-item-name">Truffle Carbonara</div>
+              <div class="promo-item-cat">Lunch</div>
+            </td>
+            <td style="font-size:13px; color:#5a4a35; max-width:220px;">Spaghetti, egg yolk, pancetta, parmesan &amp; black truffle shavings.</td>
+            <td><span class="promo-badge" style="background:rgba(92,122,90,0.12); color:#3d5c3b;">Lunch</span></td>
+            <td>
+              <div class="promo-old-price">RM 36.00</div>
+              <div class="promo-new-price">RM 27.00</div>
+            </td>
+            <td style="font-size:13px; font-weight:700; color:#c0392b;">Save RM 9</td>
+            <td><a href="order.html" class="promo-order-btn">Order Now</a></td>
+          </tr>
+
+          <!-- Promo item 5 -->
+          <tr>
+            <td>
+              <div class="promo-item-name">Artisan Cheese Plate</div>
+              <div class="promo-item-cat">Appetizer</div>
+            </td>
+            <td style="font-size:13px; color:#5a4a35; max-width:220px;">Locally sourced cheeses, fig jam, seasonal crackers &amp; grapes.</td>
+            <td><span class="promo-badge">Appetizer</span></td>
+            <td>
+              <div class="promo-old-price">RM 28.00</div>
+              <div class="promo-new-price">RM 20.00</div>
+            </td>
+            <td style="font-size:13px; font-weight:700; color:#c0392b;">Save RM 8</td>
+            <td><a href="order.html" class="promo-order-btn">Order Now</a></td>
+          </tr>
+
+          <!-- Promo item 6 -->
+          <tr>
+            <td>
+              <div class="promo-item-name">Matcha Latte</div>
+              <div class="promo-item-cat">Drinks</div>
+            </td>
+            <td style="font-size:13px; color:#5a4a35; max-width:220px;">Ceremonial grade matcha with your choice of oat or soy milk.</td>
+            <td><span class="promo-badge" style="background:rgba(92,122,90,0.12); color:#3d5c3b;">Drink</span></td>
+            <td>
+              <div class="promo-old-price">RM 15.00</div>
+              <div class="promo-new-price">RM 11.00</div>
+            </td>
+            <td style="font-size:13px; font-weight:700; color:#c0392b;">Save RM 4</td>
+            <td><a href="order.html" class="promo-order-btn">Order Now</a></td>
+          </tr>
+
+          <!-- Promo item 7 (bonus) -->
+          <tr>
+            <td>
+              <div class="promo-item-name">Flat White + Pastry <span class="seasonal-badge">Bundle</span></div>
+              <div class="promo-item-cat">Bundle</div>
+            </td>
+            <td style="font-size:13px; color:#5a4a35; max-width:220px;">A velvety flat white paired with a fresh-baked morning pastry of your choice.</td>
+            <td><span class="promo-badge">Bundle Deal</span></td>
+            <td>
+              <div class="promo-old-price">RM 21.00</div>
+              <div class="promo-new-price">RM 15.00</div>
+            </td>
+            <td style="font-size:13px; font-weight:700; color:#c0392b;">Save RM 6</td>
+            <td><a href="order.html" class="promo-order-btn">Order Now</a></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== TESTIMONIALS ===================== -->
+  <section class="testimonial-section reveal">
+    <p class="section-label" style="display:block;">What Guests Say</p>
+    <h2 class="section-title" style="margin-bottom:10px;">Loved by the Community</h2>
+    <div class="gold-bar" style="margin-bottom:60px;"></div>
+
+    <div class="testimonial-grid">
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">The flat white here is <em>genuinely</em> the best I've had in KL. The atmosphere is warm and the staff always remember your name.</p>
+        <p class="testimonial-author">— Sarah L., Regular</p>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">We held our team off-site here last month. The food was exceptional and the private corner nooks made it perfect for conversation.</p>
+        <p class="testimonial-author">— Marcus T., Corporate Guest</p>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">The avocado toast and cold brew combo is my weekly ritual. Truly the neighbourhood café I never knew I needed.</p>
+        <p class="testimonial-author">— Aisha R., Member</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== JOIN US SECTION ===================== -->
+  <section id="join" class="join-section">
+    <p class="section-label" style="display:block;">Be Part of Us</p>
+    <h2 class="section-title">Join The Daily Grind<br/>Community</h2>
+    <div class="gold-bar"></div>
+    <p class="join-body">
+      Whether you're here for the coffee, the community, or the career — there's a place for you at
+      The Daily Grind. We welcome freelancers, foodies, and future team members alike.
+    </p>
+
+    <!-- Join Us cards -->
+    <div class="join-cards">
+      <div class="join-card">
+        <div class="join-card-icon">☕</div>
+        <div class="join-card-title"><a href="loyaltyprogram.html" class="active">Loyalty Programme</a></div>
+        <p class="join-card-body">Earn a stamp with every visit and enjoy your 10th coffee completely on us. Join thousands of daily regulars.</p>
+      </div>
+
+      <div class="join-card">
+        <div class="join-card-icon">🌿</div>
+        <div class="join-card-title"><a href="membersclub.html" class="active">Members Club</a></div>
+        <p class="join-card-body">Sign up as a member and unlock exclusive promotions, early access to seasonal menus, and birthday perks.</p>
+      </div>
+
+      <div class="join-card">
+        <div class="join-card-icon">👩‍🍳</div>
+        <div class="join-card-title"><a href="workwithus.html" class="active">Work With Us</a></div>
+        <p class="join-card-body">We're always on the lookout for passionate baristas, kitchen staff, and front-of-house talent. Drop us a message!</p>
+      </div>
+    </div>
+
+    <!-- inline CSS style 2 of 3: join CTA margin -->
+    <a href="contact.html" class="join-cta" style="margin-top: 10px;">Get In Touch</a>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <h3 class="footer-brand">THE DAILY GRIND</h3>
+    <p class="footer-tagline">Coffee &amp; Kitchen</p>
+
+    <div class="footer-grid">
+      <div>
+        <p class="footer-col-label">Address</p>
+        <p>Xiamen University Malaysia<br/>Jalan Sunsuria, Bandar Sunsuria<br/>43900 Sepang, Selangor</p>
+      </div>
+      <div>
+        <p class="footer-col-label">Contact</p>
+        <p>+60 3-1234 5678<br/>hello@dailygrind.my</p>
+      </div>
+      <div>
+        <p class="footer-col-label">Hours</p>
+        <p>Mon – Fri: 7am – 9pm<br/>Saturday: 8am – 10pm<br/>Sunday: 9am – 7pm</p>
+      </div>
+      <div>
+        <p class="footer-col-label">Follow Us</p>
+        <p class="footer-links">
+          <a href="#">Facebook</a>
+          <a href="#">Instagram</a>
+          <a href="#">Twitter</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-rule"></div>
+    <!-- inline CSS style 3 of 3: footer copy color override -->
+    <p class="footer-copy" style="color: #8a7a68;">&copy; 2026 The Daily Grind. All rights reserved. &nbsp;|&nbsp; ADT2509155</p>
+  </footer>
+
+  <!-- ── Back-to-top button ── -->
+  <button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+
+  <!-- ===================== JAVASCRIPT ===================== -->
+  <script>
+
+    /* ── 1. Scroll-reveal: fade sections in as they enter viewport ── */
+    var revealEls = document.querySelectorAll('.reveal');
+    function checkReveal() {
+      for (var i = 0; i < revealEls.length; i++) {
+        var el   = revealEls[i];
+        var rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 80) {
+          el.classList.add('visible');
+        }
+      }
+    }
+    window.addEventListener('scroll', checkReveal);
+    checkReveal(); /* run once on load */
+
+    /* ── 2. Animated counter (stat cards) ── */
+    function animateCounter(el, target, duration) {
+      var start     = 0;
+      var startTime = null;
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        el.textContent = Math.floor(progress * target);
+        if (progress < 1) { requestAnimationFrame(step); }
+        else { el.textContent = target + (el.getAttribute('data-target') === '100' ? '%' : '+'); }
+      }
+      requestAnimationFrame(step);
+    }
+    var statsObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var nums = entry.target.querySelectorAll('[data-target]');
+          nums.forEach(function(num) {
+            animateCounter(num, parseInt(num.getAttribute('data-target')), 1600);
+          });
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    var statsGrid = document.querySelector('.stats-grid');
+    if (statsGrid) statsObserver.observe(statsGrid);
+
+    /* ── 3. Countdown timer to end of current month (promotions) ── */
+    function updateCountdown() {
+      var now     = new Date();
+      /* Target: last day of current month at midnight */
+      var target  = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+      var diff    = target - now;
+      if (diff <= 0) { diff = 0; }
+      var days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      function pad(n) { return n < 10 ? '0' + n : n; }
+      document.getElementById('cd-d').textContent = pad(days);
+      document.getElementById('cd-h').textContent = pad(hours);
+      document.getElementById('cd-m').textContent = pad(minutes);
+      document.getElementById('cd-s').textContent = pad(seconds);
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    /* ── 4. Back-to-top button visibility ── */
+    var backBtn = document.getElementById('back-top');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 400) { backBtn.classList.add('show'); }
+      else                      { backBtn.classList.remove('show'); }
+    });
+
+  </script>
+
+</body>
+</html>

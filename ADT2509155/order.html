@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Daily Grind – Order &amp; Reserve</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    /* ── Tab navigation ── */
+    .tab-nav {
+      background:#fff; border-bottom:2px solid #ecddc5;
+      display:flex; justify-content:center; gap:0; position:sticky; top:60px; z-index:999;
+    }
+    .tab-btn {
+      padding:18px 40px; border:none; background:none;
+      font-size:10px; letter-spacing:3px; text-transform:uppercase; font-weight:700;
+      cursor:pointer; color:var(--brown-mid); font-family:'Lato',sans-serif;
+      border-bottom:3px solid transparent; margin-bottom:-2px;
+      transition:all 0.25s;
+    }
+    .tab-btn.active { color:var(--brown-dark); border-bottom-color:var(--gold); }
+    .tab-btn:hover:not(.active) { color:var(--brown-dark); }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+
+    /* ── Shared form card style ── */
+    .order-body { padding:60px 20px 80px; max-width:900px; margin:0 auto; }
+    .form-card { background:#fff; border-radius:6px; padding:52px 48px; box-shadow:0 8px 50px rgba(43,29,14,0.10); border:1px solid rgba(0,0,0,0.05); animation:fadeUp 0.9s 0.3s both; }
+    @media(max-width:580px){ .form-card{ padding:32px 20px; } }
+    .form-section-label { font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); font-weight:700; margin:30px 0 20px; padding-bottom:12px; border-bottom:1px solid #ecddc5; display:block; }
+    .form-section-label:first-child { margin-top:0; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
+    .form-full { margin-bottom:20px; }
+    @media(max-width:580px){ .form-grid{ grid-template-columns:1fr; } }
+    .radio-group { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; }
+    .radio-label { display:flex; align-items:center; gap:8px; font-size:14px; color:var(--brown-dark); cursor:pointer; font-family:'Lato',sans-serif; }
+    .radio-label input { accent-color:var(--green); width:16px; height:16px; cursor:pointer; }
+    .checkbox-label { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--brown-dark); cursor:pointer; line-height:1.5; font-family:'Lato',sans-serif; }
+    .checkbox-label input { accent-color:var(--green); width:16px; height:16px; margin-top:2px; cursor:pointer; flex-shrink:0; }
+
+    /* ── Service mode selector ── */
+    .service-mode-group { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+    @media(max-width:580px){ .service-mode-group{ grid-template-columns:1fr; } }
+    .service-mode-card {
+      border:2px solid #ecddc5; border-radius:6px; padding:20px 16px; text-align:center;
+      cursor:pointer; transition:all 0.25s; background:#fff;
+    }
+    .service-mode-card:hover { border-color:var(--gold); background:rgba(200,169,110,0.04); }
+    .service-mode-card.selected { border-color:var(--green); background:rgba(92,122,90,0.05); }
+    .service-mode-card input[type=radio] { display:none; }
+    .service-icon { font-size:28px; display:block; margin-bottom:8px; }
+    .service-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:var(--brown-dark); }
+    .service-desc { font-size:11px; color:var(--brown-mid); margin-top:4px; }
+
+    /* ── Order items (dynamic) ── */
+    .order-item-row {
+      background:#faf8f4; border:1px solid #ecddc5; border-radius:6px;
+      padding:16px 18px; margin-bottom:14px; animation:fadeUp 0.3s both;
+    }
+    .order-item-top { display:grid; grid-template-columns:1fr 90px 38px; gap:12px; align-items:end; }
+    .order-item-note { margin-top:10px; }
+    .order-item-note label { font-size:11px; letter-spacing:1px; color:var(--gold); font-weight:700; text-transform:uppercase; display:block; margin-bottom:6px; }
+    .order-item-note input { width:100%; padding:8px 12px; border:1px solid #ecddc5; border-radius:4px; font-size:13px; color:var(--brown-dark); font-family:'Lato',sans-serif; background:#fff; outline:none; transition:border-color 0.2s; }
+    .order-item-note input:focus { border-color:var(--gold); }
+    .btn-remove { width:38px; height:50px; background:#fdf0f0; border:1.5px solid #e8c8c8; border-radius:4px; cursor:pointer; font-size:14px; color:#c0392b; transition:background 0.2s; }
+    .btn-remove:hover { background:#f8d7d7; }
+    .btn-add-item { width:100%; padding:13px; background:none; border:1.5px dashed var(--gold); color:var(--brown-mid); border-radius:4px; font-size:10px; letter-spacing:3px; text-transform:uppercase; font-weight:700; cursor:pointer; font-family:'Lato',sans-serif; margin-bottom:22px; transition:background 0.2s; }
+    .btn-add-item:hover { background:rgba(200,169,110,0.08); }
+
+    /* ── Fees breakdown ── */
+    .fees-box { background:var(--cream); border:1px solid #ecddc5; border-radius:6px; padding:20px; margin-bottom:22px; }
+    .fee-row { display:flex; justify-content:space-between; padding:7px 0; font-size:13.5px; border-bottom:1px solid #f0e8d8; }
+    .fee-row:last-child { border-bottom:none; font-weight:700; font-size:15px; color:var(--green); }
+    .fee-label { color:var(--brown-mid); }
+    .fee-val { color:var(--brown-dark); font-weight:700; }
+
+    /* ── Delivery address panel ── */
+    #delivery-section { display:none; }
+
+    /* ── Reservation tab styles ── */
+    .room-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:30px; }
+    @media(max-width:900px){ .room-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:580px){ .room-grid{ grid-template-columns:1fr; } }
+    .room-card {
+      border:2px solid #ecddc5; border-radius:8px; overflow:hidden;
+      cursor:pointer; transition:all 0.25s; background:#fff;
+    }
+    .room-card:hover { border-color:var(--gold); box-shadow:0 8px 28px rgba(43,29,14,0.1); }
+    .room-card.selected { border-color:var(--green); }
+    .room-card input[type=radio] { display:none; }
+    .room-img { width:100%; height:160px; overflow:hidden; background:#f0e8d8; }
+    .room-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; display:block; }
+    .room-img .room-emoji { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:52px; }
+    .room-card:hover .room-img img { transform:scale(1.05); }
+    .room-info { padding:16px; }
+    .room-name { font-family:'Playfair Display',serif; font-size:15px; color:var(--brown-dark); font-weight:700; margin-bottom:4px; }
+    .room-cap { font-size:11px; color:var(--gold); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; font-weight:700; }
+    .room-desc { font-size:11.5px; color:var(--brown-mid); line-height:1.6; }
+    .room-price { margin-top:8px; font-size:13px; font-weight:700; color:var(--green); }
+
+    /* ── Class tier selector ── */
+    .tier-group { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+    @media(max-width:580px){ .tier-group{ grid-template-columns:1fr; } }
+    .tier-card {
+      border:2px solid #ecddc5; border-radius:6px; padding:18px 14px; text-align:center;
+      cursor:pointer; transition:all 0.25s; background:#fff; position:relative;
+    }
+    .tier-card:hover { border-color:var(--gold); }
+    .tier-card.selected { border-color:var(--gold); background:rgba(200,169,110,0.05); }
+    .tier-card input[type=radio] { display:none; }
+    .tier-badge { font-size:9px; letter-spacing:3px; text-transform:uppercase; font-weight:700; display:inline-block; padding:2px 8px; border-radius:20px; margin-bottom:8px; }
+    .tier-badge.standard { background:rgba(92,122,90,0.12); color:var(--green); }
+    .tier-badge.premium { background:rgba(200,169,110,0.15); color:var(--gold); }
+    .tier-badge.elite { background:rgba(43,29,14,0.1); color:var(--brown-dark); border:1px solid rgba(200,169,110,0.4); }
+    .tier-name { font-family:'Playfair Display',serif; font-size:16px; color:var(--brown-dark); font-weight:700; margin-bottom:6px; }
+    .tier-perks { font-size:11px; color:var(--brown-mid); line-height:1.7; }
+    .tier-deposit { font-size:11px; font-weight:700; color:#c0392b; margin-top:8px; }
+
+    /* ── Grand total display ── */
+    .grand-total-bar {
+      background:var(--brown-dark); color:var(--gold-light);
+      text-align:right; padding:16px 20px;
+      font-size:15px; letter-spacing:2px; font-weight:700;
+      border-radius:4px; margin-bottom:22px;
+    }
+
+    /* ── Submit / action buttons ── */
+    .form-actions { display:flex; gap:14px; }
+    .btn-submit {
+      flex:1; padding:18px; background:var(--brown-dark); color:var(--cream); border:none;
+      border-radius:4px; font-size:11px; letter-spacing:4px; text-transform:uppercase; font-weight:700;
+      cursor:pointer; font-family:'Lato',sans-serif; transition:background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-submit:hover { background:#1a0f05; transform:translateY(-2px); box-shadow:0 12px 30px rgba(0,0,0,0.25); }
+    .btn-clear {
+      padding:18px 28px; background:#fff; color:var(--brown-mid); border:1.5px solid #ecddc5;
+      border-radius:4px; font-size:11px; letter-spacing:3px; text-transform:uppercase; font-weight:700;
+      cursor:pointer; font-family:'Lato',sans-serif; transition:all 0.2s;
+    }
+    .btn-clear:hover { border-color:var(--brown-dark); color:var(--brown-dark); }
+
+    /* ── Error / success ── */
+    .error-msg { display:none; color:#c0392b; font-size:12.5px; margin-top:6px; }
+    .global-error { display:none; background:#fdf0f0; border:1px solid #e8c8c8; border-radius:4px; padding:14px 18px; color:#c0392b; font-size:13px; margin-bottom:20px; }
+
+    /* ── Receipt overlay ── */
+    .receipt-overlay { display:none; position:fixed; inset:0; background:rgba(20,10,2,0.85); backdrop-filter:blur(6px); z-index:9000; align-items:center; justify-content:center; padding:20px; }
+    .receipt-overlay.open { display:flex; }
+    .receipt-box { background:#fff; border-radius:6px; width:100%; max-width:520px; max-height:92vh; overflow-y:auto; padding:44px 40px 32px; position:relative; box-shadow:0 30px 80px rgba(0,0,0,0.4); }
+    @media(max-width:580px){ .receipt-box{ padding:32px 20px 24px; } }
+    .receipt-close { position:absolute; top:14px; right:14px; background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; transition:color 0.2s; }
+    .receipt-close:hover { color:#333; }
+    .receipt-title { font-family:'Playfair Display',serif; font-size:24px; letter-spacing:4px; text-align:center; color:var(--brown-dark); margin-bottom:4px; }
+    .receipt-sub { text-align:center; font-size:9px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:26px; }
+    .receipt-meta-row { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #f0e8d8; font-size:13px; color:var(--brown-mid); }
+    .receipt-meta-row span:first-child { font-weight:700; color:var(--brown-dark); }
+    .receipt-divider { border:none; border-top:1px dashed #d4c9b8; margin:18px 0; }
+    .receipt-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:18px; }
+    .receipt-table th { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); border-bottom:1px solid #e0d4c0; padding:8px 4px; text-align:left; }
+    .receipt-table td { padding:9px 4px; border-bottom:1px solid #f5f0e8; color:var(--brown-dark); }
+    .receipt-total-row td { font-size:15px; font-weight:700; color:var(--green); border-top:2px solid var(--brown-dark); border-bottom:none; padding-top:12px; }
+    .receipt-thanks { text-align:center; font-size:13px; color:var(--brown-mid); font-style:italic; margin-bottom:18px; font-family:'Cormorant Garamond',serif; }
+    .receipt-tear { margin-top:20px; height:10px; background:repeating-linear-gradient(90deg,transparent,transparent 8px,var(--cream) 8px,var(--cream) 16px); }
+    .receipt-close-btn { width:100%; padding:14px; background:var(--brown-dark); color:var(--cream); border:none; border-radius:4px; font-size:11px; letter-spacing:3px; text-transform:uppercase; font-weight:700; cursor:pointer; font-family:'Lato',sans-serif; margin-top:16px; transition:background 0.2s; }
+    .receipt-close-btn:hover { background:#1a0f05; }
+
+    /* ── Deposit notice ── */
+    .deposit-notice { background:rgba(200,169,110,0.1); border:1px solid rgba(200,169,110,0.3); border-radius:4px; padding:14px 18px; font-size:13px; color:var(--brown-dark); margin-bottom:20px; display:none; }
+    .deposit-notice strong { color:var(--gold); }
+
+    select.field-input { cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a4a35' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; background-color:var(--warm-bg); padding-right:44px; appearance:none; }
+    select.field-input:focus { background-color:#fff; }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar"><a href="index.html">THE DAILY GRIND</a><span>Coffee &amp; Kitchen · Est. 2010</span></div>
+  <nav class="site-nav">
+    <a href="index.html">Home</a><span class="nav-sep">|</span>
+    <a href="menu.html">Menu</a><span class="nav-sep">|</span>
+    <a href="about.html">About</a><span class="nav-sep">|</span>
+    <a href="gallery.html">Gallery</a><span class="nav-sep">|</span>
+    <a href="order.html" class="active">Order</a><span class="nav-sep">|</span>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <div class="page-hero">
+    <p class="eyebrow">Place Your Order</p>
+    <h1>Order &amp; Reserve</h1>
+    <p class="sub">Order online or book your table — we take care of the rest</p>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- TAB NAVIGATION -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('order')">🛒 Place an Order</button>
+    <button class="tab-btn" onclick="switchTab('reserve')">📅 Reserve a Table</button>
+  </div>
+
+  <!-- ═══════════════ ORDER TAB ═══════════════ -->
+  <div id="tab-order" class="tab-panel active">
+  <div class="order-body">
+  <div class="form-card">
+
+    <!-- BILLING INFO -->
+    <span class="form-section-label">Billing Information</span>
+    <div class="form-grid">
+      <div>
+        <label for="b-name" class="field-label">Full Name *</label>
+        <input type="text" id="b-name" class="field-input" placeholder="Your full name"/>
+        <p id="err-name" class="error-msg"></p>
+      </div>
+      <div>
+        <label for="b-phone" class="field-label">Contact Number *</label>
+        <input type="text" id="b-phone" class="field-input" placeholder="+601X XXX XXXX" maxlength="15"/>
+        <p id="err-phone" class="error-msg"></p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div>
+        <label for="b-email" class="field-label">Email Address *</label>
+        <input type="text" id="b-email" class="field-input" placeholder="you@example.com"/>
+        <p id="err-email" class="error-msg"></p>
+      </div>
+      <div>
+        <label for="b-date" class="field-label">Preferred Date</label>
+        <input type="date" id="b-date" class="field-input"/>
+      </div>
+    </div>
+
+    <!-- MEMBERSHIP -->
+    <span class="form-section-label">Membership Status</span>
+    <div class="form-full">
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="membership" value="Regular"/> Regular</label>
+        <label class="radio-label"><input type="radio" name="membership" value="Silver"/> Silver Member</label>
+        <label class="radio-label"><input type="radio" name="membership" value="Gold"/> Gold Member</label>
+        <label class="radio-label"><input type="radio" name="membership" value="Platinum"/> Platinum Member</label>
+      </div>
+      <p id="err-membership" class="error-msg"></p>
+    </div>
+
+    <!-- SERVICE MODE -->
+    <span class="form-section-label">Service Mode</span>
+    <div class="service-mode-group">
+      <label class="service-mode-card" id="mode-dine" onclick="selectMode('dine')">
+        <input type="radio" name="service_mode" value="dine"/>
+        <span class="service-icon">🍽️</span>
+        <span class="service-label">Dine In</span>
+        <p class="service-desc">Enjoy at our café</p>
+      </label>
+      <label class="service-mode-card" id="mode-pickup" onclick="selectMode('pickup')">
+        <input type="radio" name="service_mode" value="pickup"/>
+        <span class="service-icon">🛍️</span>
+        <span class="service-label">Pick Up</span>
+        <p class="service-desc">Ready in 20 min</p>
+      </label>
+      <label class="service-mode-card" id="mode-delivery" onclick="selectMode('delivery')">
+        <input type="radio" name="service_mode" value="delivery"/>
+        <span class="service-icon">🚗</span>
+        <span class="service-label">Delivery</span>
+        <p class="service-desc">+RM 5–15 fee</p>
+      </label>
+    </div>
+    <p id="err-mode" class="error-msg"></p>
+
+    <!-- DELIVERY ADDRESS (conditional) -->
+    <div id="delivery-section">
+      <label for="b-address" class="field-label">Delivery Address *</label>
+      <textarea id="b-address" class="field-input" placeholder="Full delivery address…" rows="3"></textarea>
+      <p id="err-address" class="error-msg"></p>
+      <div class="form-full" style="margin-top:14px;">
+        <label class="field-label">Delivery Distance</label>
+        <div class="radio-group">
+          <label class="radio-label"><input type="radio" name="delivery_zone" value="5" onchange="recalc()"/> Within 5 km — RM 5.00</label>
+          <label class="radio-label"><input type="radio" name="delivery_zone" value="10" onchange="recalc()"/> 5–10 km — RM 10.00</label>
+          <label class="radio-label"><input type="radio" name="delivery_zone" value="15" onchange="recalc()"/> 10–20 km — RM 15.00</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDER ITEMS -->
+    <span class="form-section-label">Your Order</span>
+    <div id="order-items-container"></div>
+    <button type="button" class="btn-add-item" onclick="addItem()">+ Add Another Item</button>
+    <p id="err-prod1" class="error-msg" style="margin-top:-16px;margin-bottom:16px;"></p>
+
+    <!-- FEES BREAKDOWN -->
+    <div class="fees-box">
+      <div class="fee-row"><span class="fee-label">Subtotal</span><span class="fee-val" id="subtotal-val">RM 0.00</span></div>
+      <div class="fee-row" id="delivery-fee-row" style="display:none;"><span class="fee-label">🚗 Delivery Fee</span><span class="fee-val" id="delivery-fee-val">RM 0.00</span></div>
+      <div class="fee-row"><span class="fee-label">📦 Packaging Fee</span><span class="fee-val" id="packaging-fee-val">RM 0.00</span></div>
+      <div class="fee-row"><span class="fee-label">🧻 Service Charge (5%)</span><span class="fee-val" id="service-fee-val">RM 0.00</span></div>
+      <div class="fee-row"><span class="fee-label">💰 SST (6%)</span><span class="fee-val" id="sst-val">RM 0.00</span></div>
+      <div class="fee-row"><span class="fee-label">Total</span><span class="fee-val" id="total-val">RM 0.00</span></div>
+    </div>
+
+    <!-- ADDITIONAL NOTES -->
+    <div class="form-full">
+      <label for="b-notes" class="field-label">Additional Requests</label>
+      <textarea id="b-notes" class="field-input" placeholder="Allergies, special instructions, dietary requirements…" rows="3"></textarea>
+    </div>
+
+    <!-- CLARIFICATION -->
+    <div class="form-full">
+      <label class="checkbox-label">
+        <input type="checkbox" id="chk-clarification"/>
+        I confirm that all order details are correct and I agree to The Daily Grind's terms of service and cancellation policy.
+      </label>
+      <p id="err-clarification" class="error-msg"></p>
+    </div>
+
+    <p id="order-error" class="global-error"></p>
+
+    <div class="form-actions">
+      <button type="button" class="btn-submit" onclick="submitOrder()">Place Order</button>
+      <button type="button" class="btn-clear" onclick="clearOrderForm()">Clear</button>
+    </div>
+
+  </div>
+  </div>
+  </div>
+
+  <!-- ═══════════════ RESERVATION TAB ═══════════════ -->
+  <div id="tab-reserve" class="tab-panel">
+  <div class="order-body">
+  <div class="form-card">
+
+    <!-- GUEST INFO -->
+    <span class="form-section-label">Guest Information</span>
+    <div class="form-grid">
+      <div>
+        <label for="r-name" class="field-label">Full Name *</label>
+        <input type="text" id="r-name" class="field-input" placeholder="Your full name"/>
+        <p id="rerr-name" class="error-msg"></p>
+      </div>
+      <div>
+        <label for="r-phone" class="field-label">Contact Number *</label>
+        <input type="text" id="r-phone" class="field-input" placeholder="+601X XXX XXXX" maxlength="15"/>
+        <p id="rerr-phone" class="error-msg"></p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div>
+        <label for="r-email" class="field-label">Email Address *</label>
+        <input type="text" id="r-email" class="field-input" placeholder="you@example.com"/>
+        <p id="rerr-email" class="error-msg"></p>
+      </div>
+      <div>
+        <label for="r-date" class="field-label">Date *</label>
+        <input type="date" id="r-date" class="field-input"/>
+        <p id="rerr-date" class="error-msg"></p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div>
+        <label for="r-time" class="field-label">Preferred Time *</label>
+        <select id="r-time" class="field-input">
+          <option value="">-- Select time --</option>
+          <option>07:00 AM</option><option>07:30 AM</option>
+          <option>08:00 AM</option><option>08:30 AM</option>
+          <option>09:00 AM</option><option>09:30 AM</option>
+          <option>10:00 AM</option><option>10:30 AM</option>
+          <option>11:00 AM</option><option>11:30 AM</option>
+          <option>12:00 PM</option><option>12:30 PM</option>
+          <option>01:00 PM</option><option>01:30 PM</option>
+          <option>02:00 PM</option><option>02:30 PM</option>
+          <option>03:00 PM</option><option>03:30 PM</option>
+          <option>04:00 PM</option><option>04:30 PM</option>
+          <option>05:00 PM</option><option>05:30 PM</option>
+          <option>06:00 PM</option><option>06:30 PM</option>
+          <option>07:00 PM</option><option>07:30 PM</option>
+          <option>08:00 PM</option>
+        </select>
+        <p id="rerr-time" class="error-msg"></p>
+      </div>
+      <div>
+        <label for="r-guests" class="field-label">Number of Guests *</label>
+        <input type="number" id="r-guests" class="field-input" min="1" max="50" placeholder="e.g. 4"/>
+        <p id="rerr-guests" class="error-msg"></p>
+      </div>
+    </div>
+
+    <!-- SPECIAL NEEDS -->
+    <span class="form-section-label">Special Needs &amp; Requests</span>
+    <div class="form-full">
+      <label class="field-label" style="margin-bottom:10px;display:block;">Additional Requirements</label>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;">
+        <label class="checkbox-label"><input type="checkbox" id="r-baby-chair"/> 🍼 Baby High Chair(s)</label>
+        <label class="checkbox-label"><input type="checkbox" id="r-wheelchair"/> ♿ Wheelchair Access</label>
+        <label class="checkbox-label"><input type="checkbox" id="r-birthday"/> 🎂 Birthday Celebration</label>
+        <label class="checkbox-label"><input type="checkbox" id="r-anniversary"/> 💍 Anniversary</label>
+        <label class="checkbox-label"><input type="checkbox" id="r-corporate"/> 💼 Corporate Event</label>
+        <label class="checkbox-label"><input type="checkbox" id="r-projector"/> 📽️ Projector / AV Setup</label>
+      </div>
+    </div>
+
+    <!-- TABLE TYPE -->
+    <span class="form-section-label">Table Preference</span>
+    <div class="form-full">
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="table_type" value="any"/> No Preference</label>
+        <label class="radio-label"><input type="radio" name="table_type" value="long"/> 🪵 Long Table</label>
+        <label class="radio-label"><input type="radio" name="table_type" value="round"/> ⭕ Round Table</label>
+        <label class="radio-label"><input type="radio" name="table_type" value="booth"/> 🛋️ Booth Seating</label>
+      </div>
+    </div>
+
+    <!-- ROOM TYPE -->
+    <span class="form-section-label">Room &amp; Space Selection</span>
+    <div class="room-grid">
+
+      <label class="room-card" id="room-public" onclick="selectRoom('public')">
+        <input type="radio" name="room_type" value="public"/>
+        <div class="room-img"><div class="room-emoji">🌿</div></div>
+        <div class="room-info">
+          <div class="room-name">Public Hall</div>
+          <div class="room-cap">Up to 50 Guests</div>
+          <div class="room-desc">Our main open-plan dining area with full café ambience, natural light &amp; greenery.</div>
+          <div class="room-price">No deposit required</div>
+        </div>
+      </label>
+
+      <label class="room-card" id="room-garden" onclick="selectRoom('garden')">
+        <input type="radio" name="room_type" value="garden"/>
+        <div class="room-img"><div class="room-emoji">🌸</div></div>
+        <div class="room-info">
+          <div class="room-name">Garden Terrace</div>
+          <div class="room-cap">Up to 30 Guests</div>
+          <div class="room-desc">Al fresco terrace surrounded by lush greenery. Ideal for day events &amp; casual gatherings.</div>
+          <div class="room-price">No deposit required</div>
+        </div>
+      </label>
+
+      <label class="room-card" id="room-private-s" onclick="selectRoom('private-s')">
+        <input type="radio" name="room_type" value="private-s"/>
+        <div class="room-img"><div class="room-emoji">🕯️</div></div>
+        <div class="room-info">
+          <div class="room-name">Private Suite S</div>
+          <div class="room-cap">Up to 10 Guests</div>
+          <div class="room-desc">Intimate private room with mood lighting, velvet seating &amp; dedicated server.</div>
+          <div class="room-price">RM 200 deposit</div>
+        </div>
+      </label>
+
+      <label class="room-card" id="room-private-m" onclick="selectRoom('private-m')">
+        <input type="radio" name="room_type" value="private-m"/>
+        <div class="room-img"><div class="room-emoji">🎨</div></div>
+        <div class="room-info">
+          <div class="room-name">Private Loft M</div>
+          <div class="room-cap">Up to 20 Guests</div>
+          <div class="room-desc">Exposed brick, art gallery walls &amp; a dedicated bar area. Stunning for events.</div>
+          <div class="room-price">RM 400 deposit</div>
+        </div>
+      </label>
+
+      <label class="room-card" id="room-private-l" onclick="selectRoom('private-l')">
+        <input type="radio" name="room_type" value="private-l"/>
+        <div class="room-img"><div class="room-emoji">🏛️</div></div>
+        <div class="room-info">
+          <div class="room-name">Grand Private Hall</div>
+          <div class="room-cap">Up to 40 Guests</div>
+          <div class="room-desc">Full exclusive use of our heritage hall with stage, drapes &amp; full A/V system.</div>
+          <div class="room-price">RM 800 deposit</div>
+        </div>
+      </label>
+
+      <label class="room-card" id="room-rooftop" onclick="selectRoom('rooftop')">
+        <input type="radio" name="room_type" value="rooftop"/>
+        <div class="room-img"><div class="room-emoji">🌙</div></div>
+        <div class="room-info">
+          <div class="room-name">Rooftop Exclusive</div>
+          <div class="room-cap">Up to 25 Guests</div>
+          <div class="room-desc">Open-air rooftop with city views, fairy lights &amp; a signature cocktail bar. Evening only.</div>
+          <div class="room-price">RM 600 deposit</div>
+        </div>
+      </label>
+
+    </div>
+    <p id="rerr-room" class="error-msg"></p>
+
+    <!-- EXPERIENCE TIER (for private rooms only) -->
+    <div id="tier-section" style="display:none;">
+      <span class="form-section-label">Experience Class</span>
+      <p style="font-size:13px;color:var(--brown-mid);margin-bottom:20px;">Upgrade your private room experience with our exclusive packages.</p>
+      <div class="tier-group">
+
+        <label class="tier-card" id="tier-standard" onclick="selectTier('standard')">
+          <input type="radio" name="experience_tier" value="standard"/>
+          <span class="tier-badge standard">Standard</span>
+          <div class="tier-name">Essential</div>
+          <div class="tier-perks">✓ Private room<br/>✓ Dedicated server<br/>✓ Welcome drinks<br/>✓ Standard décor</div>
+          <div class="tier-deposit">Included in deposit</div>
+        </label>
+
+        <label class="tier-card" id="tier-premium" onclick="selectTier('premium')">
+          <input type="radio" name="experience_tier" value="premium"/>
+          <span class="tier-badge premium">Premium</span>
+          <div class="tier-name">Elevated</div>
+          <div class="tier-perks">✓ All Standard perks<br/>✓ Floral centrepieces<br/>✓ Premium table linen<br/>✓ Personalised menus<br/>✓ 10% off food bill</div>
+          <div class="tier-deposit">+RM 150 upgrade</div>
+        </label>
+
+        <label class="tier-card" id="tier-elite" onclick="selectTier('elite')">
+          <input type="radio" name="experience_tier" value="elite"/>
+          <span class="tier-badge elite">Elite ✦</span>
+          <div class="tier-name">Grand Luxe</div>
+          <div class="tier-perks">✓ All Premium perks<br/>✓ Live music (1 hr)<br/>✓ Custom cake / dessert<br/>✓ Photographer (30 min)<br/>✓ Champagne on arrival<br/>✓ 20% off entire bill</div>
+          <div class="tier-deposit">+RM 400 upgrade</div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- DEPOSIT NOTICE -->
+    <div class="deposit-notice" id="deposit-notice">
+      💳 <strong>Deposit Required:</strong> A deposit is required for private rooms. This will be deducted from your final bill. Cancellations made 48+ hours in advance receive a full refund.
+    </div>
+
+    <!-- ADDITIONAL NOTES -->
+    <div class="form-full">
+      <label for="r-notes" class="field-label">Special Requests / Occasion Notes</label>
+      <textarea id="r-notes" class="field-input" placeholder="Tell us about your occasion, dietary requirements, or any special arrangements needed…" rows="3"></textarea>
+    </div>
+
+    <!-- CLARIFICATION -->
+    <div class="form-full">
+      <label class="checkbox-label">
+        <input type="checkbox" id="r-chk-clarification"/>
+        I confirm that the reservation details are correct and I agree to The Daily Grind's reservation and cancellation policy.
+      </label>
+      <p id="rerr-clarification" class="error-msg"></p>
+    </div>
+
+    <p id="reserve-error" class="global-error"></p>
+
+    <div class="form-actions">
+      <button type="button" class="btn-submit" onclick="submitReservation()">Confirm Reservation</button>
+      <button type="button" class="btn-clear" onclick="clearReservationForm()">Clear</button>
+    </div>
+
+  </div>
+  </div>
+  </div>
+
+  <!-- ═══════════════ ORDER RECEIPT OVERLAY ═══════════════ -->
+  <div class="receipt-overlay" id="receipt-overlay" onclick="closeOutside(event,'receipt-overlay')">
+    <div class="receipt-box">
+      <button class="receipt-close" onclick="closeOverlay('receipt-overlay')">✕</button>
+      <div class="receipt-title">THE DAILY GRIND</div>
+      <div class="receipt-sub">Order Confirmation</div>
+      <div style="font-size:11px;color:var(--gold);text-align:center;letter-spacing:3px;margin-bottom:18px;" id="r-orderid"></div>
+      <div class="receipt-meta-row"><span>Date Issued</span><span id="r-issued"></span></div>
+      <div class="receipt-meta-row"><span>Service</span><span id="r-service-mode" class="green-val"></span></div>
+      <div class="receipt-meta-row"><span>Booking Date</span><span id="r-booking"></span></div>
+      <div class="receipt-meta-row"><span>Membership</span><span id="r-membership"></span></div>
+      <hr class="receipt-divider"/>
+      <div class="cust-section-label">Customer Details</div>
+      <div class="cust-name" id="r-cust-name"></div>
+      <div class="cust-detail" id="r-cust-phone"></div>
+      <div class="cust-detail" id="r-cust-email"></div>
+      <div class="cust-detail" id="r-cust-address" style="font-style:italic;"></div>
+      <hr class="receipt-divider"/>
+      <table class="receipt-table">
+        <thead><tr><th>Item</th><th>Note</th><th>Qty</th><th style="text-align:right;">Subtotal</th></tr></thead>
+        <tbody id="r-items-body"></tbody>
+        <tfoot>
+          <tr id="r-delivery-row" style="display:none;"><td colspan="3" style="font-size:13px;color:var(--brown-mid);">Delivery Fee</td><td id="r-delivery-fee" style="text-align:right;font-size:13px;color:var(--brown-dark);font-weight:700;padding-top:8px;"></td></tr>
+          <tr><td colspan="3" style="font-size:13px;color:var(--brown-mid);">Packaging</td><td id="r-packaging-fee" style="text-align:right;font-size:13px;color:var(--brown-dark);font-weight:700;padding-top:8px;"></td></tr>
+          <tr><td colspan="3" style="font-size:13px;color:var(--brown-mid);">Service (5%)</td><td id="r-service-fee" style="text-align:right;font-size:13px;color:var(--brown-dark);font-weight:700;padding-top:8px;"></td></tr>
+          <tr><td colspan="3" style="font-size:13px;color:var(--brown-mid);">SST (6%)</td><td id="r-sst-fee" style="text-align:right;font-size:13px;color:var(--brown-dark);font-weight:700;padding-top:8px;"></td></tr>
+          <tr class="receipt-total-row"><td colspan="3">Grand Total</td><td id="r-total" style="text-align:right;"></td></tr>
+        </tfoot>
+      </table>
+      <div id="r-bnotes" style="font-size:12px;color:var(--brown-mid);font-style:italic;margin-bottom:16px;"></div>
+      <div class="receipt-thanks">Thank you for ordering with The Daily Grind. We'll see you soon! ☕</div>
+      <div class="receipt-tear"></div>
+      <button class="receipt-close-btn" onclick="closeOverlay('receipt-overlay')">Close Receipt</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ RESERVATION RECEIPT OVERLAY ═══════════════ -->
+  <div class="receipt-overlay" id="res-overlay" onclick="closeOutside(event,'res-overlay')">
+    <div class="receipt-box">
+      <button class="receipt-close" onclick="closeOverlay('res-overlay')">✕</button>
+      <div class="receipt-title">THE DAILY GRIND</div>
+      <div class="receipt-sub">Reservation Confirmed</div>
+      <div style="font-size:11px;color:var(--gold);text-align:center;letter-spacing:3px;margin-bottom:18px;" id="res-refid"></div>
+      <div class="receipt-meta-row"><span>Name</span><span id="res-name"></span></div>
+      <div class="receipt-meta-row"><span>Date</span><span id="res-date"></span></div>
+      <div class="receipt-meta-row"><span>Time</span><span id="res-time"></span></div>
+      <div class="receipt-meta-row"><span>Guests</span><span id="res-guests"></span></div>
+      <div class="receipt-meta-row"><span>Room</span><span id="res-room" class="green-val"></span></div>
+      <div class="receipt-meta-row"><span>Experience Class</span><span id="res-tier"></span></div>
+      <div class="receipt-meta-row"><span>Table Type</span><span id="res-table"></span></div>
+      <div class="receipt-meta-row"><span>Deposit</span><span id="res-deposit" style="color:#c0392b;font-weight:700;"></span></div>
+      <hr class="receipt-divider"/>
+      <div id="res-extras" style="font-size:13px;color:var(--brown-mid);margin-bottom:16px;"></div>
+      <div id="res-notes-display" style="font-size:12px;color:var(--brown-mid);font-style:italic;margin-bottom:16px;"></div>
+      <div class="receipt-thanks">Your table is being held for you. We look forward to welcoming you! ✨</div>
+      <div class="receipt-tear"></div>
+      <button class="receipt-close-btn" onclick="closeOverlay('res-overlay')">Close</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <h3 class="footer-brand">THE DAILY GRIND</h3>
+    <p class="footer-tagline">Coffee &amp; Kitchen</p>
+    <div class="footer-grid">
+      <div><p class="footer-col-label">Address</p><p>Xiamen University Malaysia<br/>Jalan Sunsuria, Bandar Sunsuria<br/>43900 Sepang, Selangor</p></div>
+      <div><p class="footer-col-label">Contact</p><p>+60 3-1234 5678<br/>hello@dailygrind.my</p></div>
+      <div><p class="footer-col-label">Hours</p><p>Mon – Fri: 7am – 9pm<br/>Saturday: 8am – 10pm<br/>Sunday: 9am – 7pm</p></div>
+      <div><p class="footer-col-label">Follow Us</p><p class="footer-links"><a href="#">Facebook</a><a href="#">Instagram</a><a href="#">Twitter</a></p></div>
+    </div>
+    <div class="footer-rule"></div>
+    <p class="footer-copy">&copy; 2026 The Daily Grind. All rights reserved. &nbsp;|&nbsp; ADT2509155</p>
+  </footer>
+
+  <script>
+    /* ═══════════════ MENU DATA ═══════════════ */
+    var menuItems = [
+      {g:'Appetizers', n:'Artisan Cheese Plate', p:28},
+      {g:'Appetizers', n:'Creamy Mushroom Soup', p:22},
+      {g:'Appetizers', n:'Classic Bruschetta', p:18},
+      {g:'Appetizers', n:'Garlic Butter Prawns', p:32},
+      {g:'Appetizers', n:'Garden Salad Bowl', p:20},
+      {g:'Appetizers', n:'Caramelised Onion Tart', p:24},
+      {g:'Breakfast', n:'Smashed Avocado Toast', p:24},
+      {g:'Breakfast', n:'The Big Breakfast', p:32},
+      {g:'Breakfast', n:'Brioche French Toast', p:26},
+      {g:'Lunch / Dinner', n:'Grilled Herb Chicken', p:38},
+      {g:'Lunch / Dinner', n:'Truffle Carbonara', p:36},
+      {g:'Lunch / Dinner', n:'Pan-Seared Ribeye', p:68},
+      {g:'Traditional', n:'Nasi Lemak Heritage', p:22},
+      {g:'Traditional', n:'Asam Laksa', p:20},
+      {g:'Traditional', n:'Beef Rendang Set', p:34},
+      {g:'Snacks', n:'Morning Pastry Basket', p:18},
+      {g:'Snacks', n:'Truffle Parmesan Fries', p:16},
+      {g:'Snacks', n:'Hummus & Pita Board', p:19},
+      {g:'Snacks', n:'Smoked Salmon Bagel', p:23},
+      {g:'Snacks', n:'Grilled Veggie Wrap', p:18},
+      {g:'Snacks', n:'Soft Boiled Egg Soldiers', p:12},
+      {g:'Desserts', n:'New York Cheesecake', p:18},
+      {g:'Desserts', n:'Crème Brûlée', p:19},
+      {g:'Desserts', n:'Molten Lava Cake', p:22},
+      {g:'Desserts', n:'Affogato al Caffè', p:16},
+      {g:'Desserts', n:'Ondeh-Ondeh Panna Cotta', p:17},
+      {g:'Desserts', n:'Eton Mess', p:15},
+      {g:'Kids (4-12 yrs)', n:'Mini Scrambled Egg Toast', p:12},
+      {g:'Kids (4-12 yrs)', n:'Butter Pasta', p:14},
+      {g:'Kids (4-12 yrs)', n:'Mini Pancake Stack', p:13},
+      {g:'Kids (4-12 yrs)', n:'Grilled Chicken Strips', p:16},
+      {g:'Baby (6-24 mo)', n:'Banana Oat Purée', p:8},
+      {g:'Baby (6-24 mo)', n:'Sweet Potato & Carrot Mash', p:8},
+      {g:'Fruits & Wellness', n:'Seasonal Fruit Platter', p:16},
+      {g:'Fruits & Wellness', n:'Açaí Power Bowl', p:22},
+      {g:'Fruits & Wellness', n:'Green Goddess Bowl', p:20},
+      {g:'Hot Beverages', n:'Espresso', p:8},
+      {g:'Hot Beverages', n:'Flat White', p:12},
+      {g:'Hot Beverages', n:'Cappuccino', p:11},
+      {g:'Hot Beverages', n:'Café Latte', p:13},
+      {g:'Hot Beverages', n:'Long Black', p:9},
+      {g:'Hot Beverages', n:'Cortado', p:10},
+      {g:'Hot Beverages', n:'Matcha Latte', p:15},
+      {g:'Hot Beverages', n:'Chamomile Tea', p:10},
+      {g:'Hot Beverages', n:'Masala Chai', p:12},
+      {g:'Hot Beverages', n:'Teh Tarik', p:8},
+      {g:'Hot Beverages', n:'White Hot Chocolate', p:14},
+      {g:'Cold Beverages', n:'Cold Brew', p:14},
+      {g:'Cold Beverages', n:'Iced Latte', p:14},
+      {g:'Cold Beverages', n:'Iced Matcha', p:16},
+      {g:'Cold Beverages', n:'Fresh Orange Juice', p:13},
+      {g:'Cold Beverages', n:'Watermelon Mint Cooler', p:14},
+      {g:'Cold Beverages', n:'Mango Lassi', p:15},
+      {g:'Cold Beverages', n:'Sparkling Lemonade', p:12},
+      {g:'Cold Beverages', n:'Bandung Rose', p:9},
+      {g:'Alcoholic (21+)', n:'House Red Wine', p:28},
+      {g:'Alcoholic (21+)', n:'Prosecco Glass', p:32},
+      {g:'Alcoholic (21+)', n:'Craft Beer of the Month', p:22},
+      {g:'Alcoholic (21+)', n:'Espresso Martini', p:42},
+      {g:'Alcoholic (21+)', n:'Café Old Fashioned', p:48},
+      {g:'Alcoholic (21+)', n:'Tropical Mule', p:38},
+      {g:'Bundles', n:'Rise & Shine Set', p:35},
+      {g:'Bundles', n:'Power Lunch Duo', p:52},
+      {g:'Bundles', n:'Family Feast Bundle', p:98},
+      {g:'Bundles', n:'Date Night Package', p:138},
+      {g:'Bundles', n:"Barista's Pick Trio", p:38},
+      {g:'Bundles', n:'Clean & Green Set', p:52}
+    ];
+
+    /* Build select HTML */
+    function buildSelectHTML(placeholder) {
+      var grouped = {};
+      menuItems.forEach(function(i){ if(!grouped[i.g]) grouped[i.g]=[]; grouped[i.g].push(i); });
+      var html = '<option value="">'+placeholder+'</option>';
+      Object.keys(grouped).forEach(function(g){
+        html += '<optgroup label="'+g+'">';
+        grouped[g].forEach(function(i){ html += '<option value="'+i.n+'" data-price="'+i.p+'">'+i.n+' — RM '+i.p.toFixed(2)+'</option>'; });
+        html += '</optgroup>';
+      });
+      return html;
+    }
+
+    /* ═══════════════ ORDER ITEM ROWS ═══════════════ */
+    var itemCount = 0;
+    var currentMode = '';
+
+    function addItem() {
+      itemCount++;
+      var id = itemCount;
+      var div = document.createElement('div');
+      div.className = 'order-item-row';
+      div.id = 'item-row-'+id;
+      div.innerHTML =
+        '<div class="order-item-top">'+
+          '<div>'+
+            '<label class="field-label">Menu Item'+(id===1?' *':'')+'</label>'+
+            '<select class="field-input" id="sel-'+id+'" onchange="recalc()">'+buildSelectHTML('-- Select item --')+'</select>'+
+          '</div>'+
+          '<div>'+
+            '<label class="field-label">Qty</label>'+
+            '<input type="number" id="qty-'+id+'" class="field-input" value="1" min="1" max="99" oninput="recalc()"/>'+
+          '</div>'+
+          (id>1?'<button type="button" class="btn-remove" onclick="removeItem('+id+')" title="Remove">✕</button>':'<div></div>')+
+        '</div>'+
+        '<div class="order-item-note">'+
+          '<label>Special Note for this item</label>'+
+          '<input type="text" id="note-'+id+'" placeholder="e.g. no onions, extra sauce, allergy note…"/>'+
+        '</div>';
+      document.getElementById('order-items-container').appendChild(div);
+    }
+
+    function removeItem(id) {
+      var el = document.getElementById('item-row-'+id);
+      if(el){ el.parentNode.removeChild(el); recalc(); }
+    }
+
+    /* ═══════════════ FEES & TOTALS ═══════════════ */
+    function getPrice(name) {
+      for(var i=0;i<menuItems.length;i++){ if(menuItems[i].n===name) return menuItems[i].p; }
+      return 0;
+    }
+
+    function recalc() {
+      var subtotal = 0;
+      var rows = document.getElementById('order-items-container').getElementsByClassName('order-item-row');
+      for(var i=0;i<rows.length;i++){
+        var idx = rows[i].id.replace('item-row-','');
+        var sel = document.getElementById('sel-'+idx);
+        var qty = parseInt(document.getElementById('qty-'+idx).value)||1;
+        if(sel && sel.value) subtotal += getPrice(sel.value)*qty;
+      }
+
+      /* Delivery fee */
+      var deliveryFee = 0;
+      if(currentMode==='delivery'){
+        var zoneEl = document.querySelector('input[name=delivery_zone]:checked');
+        if(zoneEl) deliveryFee = parseFloat(zoneEl.value);
+        document.getElementById('delivery-fee-row').style.display='flex';
+        document.getElementById('delivery-fee-val').textContent='RM '+deliveryFee.toFixed(2);
+      } else {
+        document.getElementById('delivery-fee-row').style.display='none';
+      }
+
+      /* Packaging fee: RM 1.50 per item row for takeaway/delivery */
+      var packFee = 0;
+      if(currentMode==='delivery'||currentMode==='pickup'){
+        packFee = rows.length * 1.5;
+      }
+      document.getElementById('packaging-fee-val').textContent='RM '+packFee.toFixed(2);
+
+      /* Service charge 5% */
+      var serviceFee = subtotal * 0.05;
+      document.getElementById('service-fee-val').textContent='RM '+serviceFee.toFixed(2);
+
+      /* SST 6% on food+service */
+      var sst = (subtotal + serviceFee) * 0.06;
+      document.getElementById('sst-val').textContent='RM '+sst.toFixed(2);
+
+      var total = subtotal + deliveryFee + packFee + serviceFee + sst;
+      document.getElementById('subtotal-val').textContent='RM '+subtotal.toFixed(2);
+      document.getElementById('total-val').textContent='RM '+total.toFixed(2);
+    }
+
+    /* ═══════════════ SERVICE MODE ═══════════════ */
+    function selectMode(mode) {
+      currentMode = mode;
+      ['dine','pickup','delivery'].forEach(function(m){
+        document.getElementById('mode-'+m).classList.remove('selected');
+      });
+      document.getElementById('mode-'+mode).classList.add('selected');
+      document.getElementById('delivery-section').style.display = (mode==='delivery') ? 'block' : 'none';
+      recalc();
+    }
+
+    /* ═══════════════ VALIDATION HELPERS ═══════════════ */
+    function showErr(id, msg){ var el=document.getElementById(id); el.textContent=msg; el.style.display='block'; }
+    function clearErr(id){ var el=document.getElementById(id); if(!el) return; el.textContent=''; el.style.display='none'; }
+
+    /* ═══════════════ SUBMIT ORDER ═══════════════ */
+    function submitOrder(){
+      var valid = true;
+      ['err-name','err-phone','err-email','err-mode','err-prod1','err-address','err-clarification','order-error'].forEach(clearErr);
+
+      var name = document.getElementById('b-name').value.trim();
+      if(!name){ showErr('err-name','Name cannot be empty.'); valid=false; }
+      else if(/\d/.test(name)){ showErr('err-name','Name cannot contain numbers.'); valid=false; }
+
+      var phone = document.getElementById('b-phone').value.trim();
+      if(!phone){ showErr('err-phone','Contact number cannot be empty.'); valid=false; }
+      else if(!/^\d+$/.test(phone.replace(/[\s+\-]/g,''))){ showErr('err-phone','Numbers only please.'); valid=false; }
+      else if(phone.replace(/[\s+\-]/g,'').length>15){ showErr('err-phone','Max 15 digits.'); valid=false; }
+
+      var email = document.getElementById('b-email').value.trim();
+      if(!email){ showErr('err-email','Email cannot be empty.'); valid=false; }
+      else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showErr('err-email','Please enter a valid email.'); valid=false; }
+
+      var membership=''; var radios=document.getElementsByName('membership');
+      for(var r=0;r<radios.length;r++){ if(radios[r].checked){ membership=radios[r].value; break; } }
+      if(!membership){ showErr('err-membership','Please select your membership status.'); valid=false; }
+
+      if(!currentMode){ showErr('err-mode','Please select a service mode.'); valid=false; }
+
+      if(currentMode==='delivery'){
+        var addr=document.getElementById('b-address').value.trim();
+        if(!addr){ showErr('err-address','Please enter your delivery address.'); valid=false; }
+        var zone=document.querySelector('input[name=delivery_zone]:checked');
+        if(!zone){ showErr('err-address','Please select your delivery zone.'); valid=false; }
+      }
+
+      /* Check at least one item selected */
+      var rows=document.getElementById('order-items-container').getElementsByClassName('order-item-row');
+      var hasItem=false;
+      if(rows.length>0){
+        var idx=rows[0].id.replace('item-row-','');
+        var sel=document.getElementById('sel-'+idx);
+        if(sel && sel.value) hasItem=true;
+      }
+      if(!hasItem){ showErr('err-prod1','Please add at least one menu item.'); valid=false; }
+
+      if(!document.getElementById('chk-clarification').checked){ showErr('err-clarification','Please confirm the terms before submitting.'); valid=false; }
+
+      if(!valid){ showErr('order-error','⚠ Please correct the errors above before submitting.'); return; }
+
+      alert('Submission Accepted.');
+      buildOrderReceipt(name,phone,email,membership);
+    }
+
+    function buildOrderReceipt(name,phone,email,membership){
+      var date=document.getElementById('b-date').value;
+      var dateStr='—';
+      if(date){ var d=new Date(date+'T00:00:00'); var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; dateStr=days[d.getDay()]+', '+date; }
+
+      var modeLabels={dine:'Dine In 🍽️', pickup:'Pick Up 🛍️', delivery:'Delivery 🚗'};
+
+      /* Build order rows */
+      var tbodyHTML=''; var subtotal=0;
+      var rows=document.getElementById('order-items-container').getElementsByClassName('order-item-row');
+      for(var i=0;i<rows.length;i++){
+        var idx=rows[i].id.replace('item-row-','');
+        var sel=document.getElementById('sel-'+idx);
+        var qty=parseInt(document.getElementById('qty-'+idx).value)||1;
+        var note=document.getElementById('note-'+idx).value.trim();
+        if(sel && sel.value){
+          var p=getPrice(sel.value); var sub=p*qty; subtotal+=sub;
+          tbodyHTML+='<tr><td>'+sel.value+'</td><td style="font-size:11px;color:var(--brown-mid);">'+(note||'—')+'</td><td style="text-align:center;">'+qty+'</td><td style="text-align:right;font-weight:700;">RM '+sub.toFixed(2)+'</td></tr>';
+        }
+      }
+
+      var deliveryFee=0;
+      if(currentMode==='delivery'){ var z=document.querySelector('input[name=delivery_zone]:checked'); if(z) deliveryFee=parseFloat(z.value); }
+      var packFee=(currentMode==='delivery'||currentMode==='pickup')? rows.length*1.5 : 0;
+      var serviceFee=subtotal*0.05; var sst=(subtotal+serviceFee)*0.06;
+      var total=subtotal+deliveryFee+packFee+serviceFee+sst;
+
+      document.getElementById('r-orderid').textContent='#DG-'+(Math.floor(1000+Math.random()*9000));
+      document.getElementById('r-issued').textContent=new Date().toLocaleDateString('en-MY');
+      document.getElementById('r-service-mode').textContent=modeLabels[currentMode]||currentMode;
+      document.getElementById('r-booking').textContent=dateStr;
+      document.getElementById('r-membership').textContent=membership;
+      document.getElementById('r-cust-name').textContent=name;
+      document.getElementById('r-cust-phone').textContent=phone;
+      document.getElementById('r-cust-email').textContent=email;
+      var addr=document.getElementById('b-address').value.trim();
+      document.getElementById('r-cust-address').textContent=addr?'📍 '+addr:'';
+      document.getElementById('r-items-body').innerHTML=tbodyHTML;
+
+      var dRow=document.getElementById('r-delivery-row');
+      if(currentMode==='delivery' && deliveryFee>0){ dRow.style.display=''; document.getElementById('r-delivery-fee').textContent='RM '+deliveryFee.toFixed(2); }
+      else { dRow.style.display='none'; }
+      document.getElementById('r-packaging-fee').textContent='RM '+packFee.toFixed(2);
+      document.getElementById('r-service-fee').textContent='RM '+serviceFee.toFixed(2);
+      document.getElementById('r-sst-fee').textContent='RM '+sst.toFixed(2);
+      document.getElementById('r-total').textContent='RM '+total.toFixed(2);
+
+      var addNotes=document.getElementById('b-notes').value.trim();
+      document.getElementById('r-bnotes').textContent=addNotes?'📝 Note: '+addNotes:'';
+
+      document.getElementById('receipt-overlay').classList.add('open');
+    }
+
+    /* ═══════════════ CLEAR ORDER FORM ═══════════════ */
+    function clearOrderForm(){
+      document.getElementById('b-name').value='';
+      document.getElementById('b-phone').value='';
+      document.getElementById('b-email').value='';
+      document.getElementById('b-date').value='';
+      document.getElementById('b-address').value='';
+      document.getElementById('b-notes').value='';
+      document.getElementsByName('membership').forEach(function(r){r.checked=false;});
+      document.getElementsByName('delivery_zone').forEach(function(r){r.checked=false;});
+      document.getElementById('chk-clarification').checked=false;
+      ['dine','pickup','delivery'].forEach(function(m){ document.getElementById('mode-'+m).classList.remove('selected'); });
+      currentMode='';
+      document.getElementById('delivery-section').style.display='none';
+      document.getElementById('order-items-container').innerHTML='';
+      itemCount=0; addItem();
+      recalc();
+      ['err-name','err-phone','err-email','err-membership','err-mode','err-prod1','err-address','err-clarification','order-error'].forEach(clearErr);
+    }
+
+    /* ═══════════════ ROOM & TIER SELECTION ═══════════════ */
+    var privateRooms=['private-s','private-m','private-l','rooftop'];
+    var roomDeposits={'public':0,'garden':0,'private-s':200,'private-m':400,'private-l':800,'rooftop':600};
+    var roomNames={'public':'Public Hall','garden':'Garden Terrace','private-s':'Private Suite S','private-m':'Private Loft M','private-l':'Grand Private Hall','rooftop':'Rooftop Exclusive'};
+    var tierLabels={'standard':'Essential','premium':'Elevated (+RM 150)','elite':'Grand Luxe (+RM 400)'};
+    var currentRoom='';
+
+    function selectRoom(room){
+      currentRoom=room;
+      ['public','garden','private-s','private-m','private-l','rooftop'].forEach(function(r){ document.getElementById('room-'+r).classList.remove('selected'); });
+      document.getElementById('room-'+room).classList.add('selected');
+      document.querySelector('#room-'+room+' input').checked=true;
+
+      var isPrivate=privateRooms.indexOf(room)>-1;
+      document.getElementById('tier-section').style.display=isPrivate?'block':'none';
+      document.getElementById('deposit-notice').style.display=isPrivate?'block':'none';
+    }
+
+    function selectTier(tier){
+      ['standard','premium','elite'].forEach(function(t){ document.getElementById('tier-'+t).classList.remove('selected'); });
+      document.getElementById('tier-'+tier).classList.add('selected');
+      document.querySelector('#tier-'+tier+' input').checked=true;
+    }
+
+    /* ═══════════════ SUBMIT RESERVATION ═══════════════ */
+    function submitReservation(){
+      var valid=true;
+      ['rerr-name','rerr-phone','rerr-email','rerr-date','rerr-time','rerr-guests','rerr-room','rerr-clarification','reserve-error'].forEach(clearErr);
+
+      var name=document.getElementById('r-name').value.trim();
+      if(!name){ showErr('rerr-name','Name cannot be empty.'); valid=false; }
+      else if(/\d/.test(name)){ showErr('rerr-name','Name cannot contain numbers.'); valid=false; }
+
+      var phone=document.getElementById('r-phone').value.trim();
+      if(!phone){ showErr('rerr-phone','Phone cannot be empty.'); valid=false; }
+      else if(!/^\d+$/.test(phone.replace(/[\s+\-]/g,''))){ showErr('rerr-phone','Numbers only please.'); valid=false; }
+
+      var email=document.getElementById('r-email').value.trim();
+      if(!email){ showErr('rerr-email','Email cannot be empty.'); valid=false; }
+      else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showErr('rerr-email','Please enter a valid email.'); valid=false; }
+
+      if(!document.getElementById('r-date').value){ showErr('rerr-date','Please select a date.'); valid=false; }
+      if(!document.getElementById('r-time').value){ showErr('rerr-time','Please select a time.'); valid=false; }
+
+      var guests=parseInt(document.getElementById('r-guests').value);
+      if(!guests||guests<1){ showErr('rerr-guests','Please enter number of guests.'); valid=false; }
+
+      if(!currentRoom){ showErr('rerr-room','Please select a room or space.'); valid=false; }
+
+      if(!document.getElementById('r-chk-clarification').checked){ showErr('rerr-clarification','Please confirm the reservation policy.'); valid=false; }
+
+      if(!valid){ showErr('reserve-error','⚠ Please correct the errors above.'); return; }
+
+      alert('Reservation Accepted!');
+      buildResReceipt(name, phone, email);
+    }
+
+    function buildResReceipt(name,phone,email){
+      var isPrivate=privateRooms.indexOf(currentRoom)>-1;
+      var deposit=roomDeposits[currentRoom]||0;
+
+      var tierEl=document.querySelector('input[name=experience_tier]:checked');
+      var tier=tierEl?tierEl.value:'—';
+      var tierLabel=tierLabels[tier]||'—';
+
+      var tableEl=document.querySelector('input[name=table_type]:checked');
+      var tableLabel=tableEl?tableEl.value.charAt(0).toUpperCase()+tableEl.value.slice(1):'No preference';
+
+      var extras=[];
+      if(document.getElementById('r-baby-chair').checked) extras.push('🍼 Baby High Chair');
+      if(document.getElementById('r-wheelchair').checked) extras.push('♿ Wheelchair Access');
+      if(document.getElementById('r-birthday').checked) extras.push('🎂 Birthday Celebration');
+      if(document.getElementById('r-anniversary').checked) extras.push('💍 Anniversary');
+      if(document.getElementById('r-corporate').checked) extras.push('💼 Corporate Event');
+      if(document.getElementById('r-projector').checked) extras.push('📽️ Projector / AV');
+
+      document.getElementById('res-refid').textContent='#RES-'+(Math.floor(1000+Math.random()*9000));
+      document.getElementById('res-name').textContent=name;
+      document.getElementById('res-date').textContent=document.getElementById('r-date').value;
+      document.getElementById('res-time').textContent=document.getElementById('r-time').value;
+      document.getElementById('res-guests').textContent=document.getElementById('r-guests').value+' guest(s)';
+      document.getElementById('res-room').textContent=roomNames[currentRoom]||currentRoom;
+      document.getElementById('res-tier').textContent=isPrivate?tierLabel:'N/A';
+      document.getElementById('res-table').textContent=tableLabel;
+      document.getElementById('res-deposit').textContent=deposit>0?'RM '+deposit.toFixed(2)+' (refundable)':'None required';
+      document.getElementById('res-extras').textContent=extras.length?'Extras: '+extras.join(', '):'';
+      var notes=document.getElementById('r-notes').value.trim();
+      document.getElementById('res-notes-display').textContent=notes?'📝 '+notes:'';
+
+      document.getElementById('res-overlay').classList.add('open');
+    }
+
+    function clearReservationForm(){
+      ['r-name','r-phone','r-email'].forEach(function(id){document.getElementById(id).value='';});
+      document.getElementById('r-date').value='';
+      document.getElementById('r-time').value='';
+      document.getElementById('r-guests').value='';
+      document.getElementById('r-notes').value='';
+      ['r-baby-chair','r-wheelchair','r-birthday','r-anniversary','r-corporate','r-projector','r-chk-clarification'].forEach(function(id){document.getElementById(id).checked=false;});
+      document.getElementsByName('table_type').forEach(function(r){r.checked=false;});
+      document.getElementsByName('room_type').forEach(function(r){r.checked=false;});
+      document.getElementsByName('experience_tier').forEach(function(r){r.checked=false;});
+      ['public','garden','private-s','private-m','private-l','rooftop'].forEach(function(r){ document.getElementById('room-'+r).classList.remove('selected'); });
+      ['standard','premium','elite'].forEach(function(t){ document.getElementById('tier-'+t).classList.remove('selected'); });
+      currentRoom='';
+      document.getElementById('tier-section').style.display='none';
+      document.getElementById('deposit-notice').style.display='none';
+      ['rerr-name','rerr-phone','rerr-email','rerr-date','rerr-time','rerr-guests','rerr-room','rerr-clarification','reserve-error'].forEach(clearErr);
+    }
+
+    /* ═══════════════ TAB SWITCHING ═══════════════ */
+    function switchTab(tab){
+      document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+      document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+      document.getElementById('tab-'+tab).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    /* ═══════════════ OVERLAY CLOSE ═══════════════ */
+    function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
+    function closeOutside(e, id){ if(e.target===document.getElementById(id)) closeOverlay(id); }
+
+    /* ═══════════════ INIT ═══════════════ */
+    addItem(); /* Add first item row on load */
+    recalc();
+  </script>
+</body>
+</html>

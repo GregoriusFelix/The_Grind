@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Daily Grind – Members Club</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Top branding bar -->
+  <div class="top-bar">
+    <a href="index.html">THE DAILY GRIND</a>
+    <span>Coffee &amp; Kitchen · Est. 2010</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <span class="nav-sep">|</span>
+    <a href="menu.html">Menu</a>
+    <span class="nav-sep">|</span>
+    <a href="about.html">About</a>
+    <span class="nav-sep">|</span>
+    <a href="gallery.html">Gallery</a>
+    <span class="nav-sep">|</span>
+    <a href="order.html">Order</a>
+    <span class="nav-sep">|</span>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <p class="eyebrow">Exclusive Benefits</p>
+    <h1>Members Club</h1>
+    <p class="sub">Premium perks · Priority access · Unmatched rewards</p>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- Members Club Section -->
+  <section class="members-section">
+    <p class="section-label">Premium Membership</p>
+    <h2 class="section-title">Elevate Your Experience</h2>
+    <div class="gold-bar" style="margin-bottom:56px;"></div>
+
+    <p class="members-intro">Join The Daily Grind Members Club and unlock a world of exclusive privileges, from priority reservations to birthday rewards and special event invitations. Choose the tier that suits your lifestyle.</p>
+
+    <!-- Membership Tiers -->
+    <div class="tiers-grid">
+      
+      <!-- Silver Tier -->
+      <div class="tier-card">
+        <div class="tier-header tier-silver">
+          <div class="tier-icon">🥈</div>
+          <h3 class="tier-name">Silver</h3>
+          <p class="tier-tagline">Your Gateway to Perks</p>
+        </div>
+        <div class="tier-price">
+          <span class="price-amount">RM 99</span>
+          <span class="price-period">/year</span>
+        </div>
+        <div class="tier-deposit">
+          <span>One-time card fee: RM 20</span>
+        </div>
+        <ul class="tier-benefits">
+          <li>✓ 10% discount on all food & beverages</li>
+          <li>✓ Priority seating during peak hours</li>
+          <li>✓ Birthday month: 15% discount</li>
+          <li>✓ Free birthday dessert</li>
+          <li>✓ Monthly newsletter with exclusive recipes</li>
+          <li>✓ Early access to seasonal menus (3 days)</li>
+          <li>✓ 1 free coffee per month</li>
+          <li>✓ Member-only events invitation</li>
+        </ul>
+        <button onclick="selectTier('silver')" class="btn-tier">Select Silver</button>
+      </div>
+
+      <!-- Gold Tier -->
+      <div class="tier-card tier-featured">
+        <div class="tier-badge">Most Popular</div>
+        <div class="tier-header tier-gold">
+          <div class="tier-icon">🥇</div>
+          <h3 class="tier-name">Gold</h3>
+          <p class="tier-tagline">The Connoisseur's Choice</p>
+        </div>
+        <div class="tier-price">
+          <span class="price-amount">RM 249</span>
+          <span class="price-period">/year</span>
+        </div>
+        <div class="tier-deposit">
+          <span>One-time card fee: RM 50</span>
+        </div>
+        <ul class="tier-benefits">
+          <li>✓ Everything in Silver, plus:</li>
+          <li>✓ <strong>15% discount</strong> on all food & beverages</li>
+          <li>✓ Reserved table guarantee (with 24h notice)</li>
+          <li>✓ Birthday month: <strong>20% discount</strong></li>
+          <li>✓ Free birthday cake (serves 2)</li>
+          <li>✓ Complimentary valet parking</li>
+          <li>✓ Early access to seasonal menus (7 days)</li>
+          <li>✓ <strong>3 free coffees per month</strong></li>
+          <li>✓ Quarterly tasting event with chef</li>
+          <li>✓ Personal locker for wine storage</li>
+          <li>✓ Bring a guest to member events</li>
+        </ul>
+        <button onclick="selectTier('gold')" class="btn-tier btn-tier-gold">Select Gold</button>
+      </div>
+
+      <!-- Platinum Tier -->
+      <div class="tier-card">
+        <div class="tier-header tier-platinum">
+          <div class="tier-icon">💎</div>
+          <h3 class="tier-name">Platinum</h3>
+          <p class="tier-tagline">The Ultimate VIP</p>
+        </div>
+        <div class="tier-price">
+          <span class="price-amount">RM 599</span>
+          <span class="price-period">/year</span>
+        </div>
+        <div class="tier-deposit">
+          <span>One-time card fee: RM 100</span>
+        </div>
+        <ul class="tier-benefits">
+          <li>✓ Everything in Gold, plus:</li>
+          <li>✓ <strong>20% discount</strong> on all food & beverages</li>
+          <li>✓ Private dining room access (4 bookings/year)</li>
+          <li>✓ Birthday month: <strong>25% discount</strong></li>
+          <li>✓ Custom birthday celebration package</li>
+          <li>✓ Unlimited free coffee</li>
+          <li>✓ Personal chef consultation (2x/year)</li>
+          <li>✓ Early access to seasonal menus (14 days)</li>
+          <li>✓ Exclusive quarterly wine tasting</li>
+          <li>✓ Complimentary coat check & concierge</li>
+          <li>✓ Skip-the-line privilege anytime</li>
+          <li>✓ Personalized menu recommendations</li>
+          <li>✓ Bring up to 3 guests to member events</li>
+          <li>✓ Annual complimentary dinner (RM 300 value)</li>
+        </ul>
+        <button onclick="selectTier('platinum')" class="btn-tier btn-tier-platinum">Select Platinum</button>
+      </div>
+
+    </div>
+    <br><br>
+
+    <!-- Membership Requirements -->
+    <div class="requirements-section">
+      <h3 class="section-title-small">Membership Requirements</h3>
+      <div class="requirements-grid">
+        <div class="req-card">
+          <h4>📋 Registration</h4>
+          <p>Complete the registration form below with valid ID and contact details.</p>
+        </div>
+        <div class="req-card">
+          <h4>💳 Payment</h4>
+          <p>Annual membership fee + one-time refundable card deposit via card or online transfer.</p>
+        </div>
+        <div class="req-card">
+          <h4>📸 Photo</h4>
+          <p>Submit a passport-sized photo for your personalized member card.</p>
+        </div>
+        <div class="req-card">
+          <h4>✅ Activation</h4>
+          <p>Receive your member card within 5 business days and start enjoying benefits immediately.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="registration-form">
+      <h3 class="section-title-small">Member Registration</h3>
+      <div class="gold-bar" style="margin-bottom:40px;"></div>
+
+      <div id="success-msg-member" class="success-banner">
+        ✓ Registration successful! Welcome to The Daily Grind Members Club. Check your email for next steps.
+      </div>
+
+      <form id="memberForm" onsubmit="event.preventDefault(); document.getElementById('member-success-overlay').classList.add('open'); this.reset();">
+        <!-- Personal Information -->
+        <h4 class="form-section-title">Personal Information</h4>
+        
+        <div class="field-row">
+          <div class="field">
+            <label for="m-firstname" class="field-label">First Name *</label>
+            <input type="text" id="m-firstname" placeholder="John" class="field-input" required/>
+          </div>
+          <div class="field">
+            <label for="m-lastname" class="field-label">Last Name *</label>
+            <input type="text" id="m-lastname" placeholder="Doe" class="field-input" required/>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="m-email" class="field-label">Email Address *</label>
+            <input type="email" id="m-email" placeholder="john.doe@example.com" class="field-input" required/>
+          </div>
+          <div class="field">
+            <label for="m-phone" class="field-label">Phone Number *</label>
+            <input type="tel" id="m-phone" placeholder="+60 12 345 6789" class="field-input" required/>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="m-dob" class="field-label">Date of Birth *</label>
+            <input type="date" id="m-dob" class="field-input" required/>
+          </div>
+          <div class="field">
+            <label for="m-ic" class="field-label">IC/Passport Number *</label>
+            <input type="text" id="m-ic" placeholder="123456-78-9012" class="field-input" required/>
+          </div>
+        </div>
+
+        <div class="field-full">
+          <label for="m-address" class="field-label">Full Address *</label>
+          <textarea id="m-address" placeholder="Street, City, Postcode, State" class="field-input" rows="3" required></textarea>
+        </div>
+
+        <!-- Membership Selection -->
+        <h4 class="form-section-title">Membership Tier Selection</h4>
+        
+        <div class="field-full">
+          <label class="field-label">Select Your Tier *</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="tier" value="silver" id="tier-silver" required/>
+              <span>Silver (RM 99/year + RM 20 deposit)</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="tier" value="gold" id="tier-gold"/>
+              <span>Gold (RM 249/year + RM 50 deposit) <span class="badge-popular">Popular</span></span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="tier" value="platinum" id="tier-platinum"/>
+              <span>Platinum (RM 599/year + RM 100 deposit)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Payment Information -->
+        <h4 class="form-section-title">Payment Information</h4>
+        
+        <div class="field-full">
+          <label class="field-label">Payment Method *</label>
+          <select id="m-payment" class="field-input" required>
+            <option value="">Select payment method</option>
+            <option value="credit">Credit/Debit Card</option>
+            <option value="online">Online Banking</option>
+            <option value="ewallet">E-Wallet (Touch 'n Go, GrabPay)</option>
+          </select>
+        </div>
+
+        <div class="field-full">
+          <label class="checkbox-label">
+            <input type="checkbox" id="m-terms" required/>
+            <span>I agree to the <a href="#terms">Terms & Conditions</a> and <a href="#privacy">Privacy Policy</a> *</span>
+          </label>
+        </div>
+
+        <div class="field-full">
+          <label class="checkbox-label">
+            <input type="checkbox" id="m-newsletter"/>
+            <span>Subscribe to our newsletter for exclusive offers and updates</span>
+          </label>
+        </div>
+
+        <p id="error-msg-member" class="error-msg">⚠ Please fill in all required fields.</p>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Submit Registration</button>
+          <button type="button" onclick="resetForm()" class="btn-reset">Reset Form</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <h3 class="section-title-small">Frequently Asked Questions</h3>
+      <div class="gold-bar" style="margin-bottom:40px;"></div>
+
+      <div class="faq-item">
+        <h4 class="faq-question">Can I upgrade my tier later?</h4>
+        <p class="faq-answer">Yes! You can upgrade anytime. Pay the difference in annual fees and the new tier benefits activate immediately.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4 class="faq-question">Is the card deposit refundable?</h4>
+        <p class="faq-answer">Yes, the one-time card deposit is fully refundable when you return your member card in good condition upon cancellation.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4 class="faq-question">Can I share my membership with family?</h4>
+        <p class="faq-answer">Memberships are personal and non-transferable. However, Gold and Platinum members can bring guests to exclusive events.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4 class="faq-question">What happens if I lose my card?</h4>
+        <p class="faq-answer">A replacement card can be issued for a fee of RM 30. Your membership benefits remain active during replacement.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4 class="faq-question">How do I cancel my membership?</h4>
+        <p class="faq-answer">Submit a written cancellation request 30 days before renewal. Annual fees are non-refundable but card deposits will be returned.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <h3 class="footer-brand">THE DAILY GRIND</h3>
+    <p class="footer-tagline">Coffee &amp; Kitchen</p>
+    <div class="footer-grid">
+      <div>
+        <p class="footer-col-label">Address</p>
+        <p>Xiamen University Malaysia<br/>Jalan Sunsuria, Bandar Sunsuria<br/>43900 Sepang, Selangor</p>
+      </div>
+      <div>
+        <p class="footer-col-label">Contact</p>
+        <p>+60 3-1234 5678<br/>hello@dailygrind.my</p>
+      </div>
+      <div>
+        <p class="footer-col-label">Hours</p>
+        <p>Mon – Fri: 7am – 9pm<br/>Saturday: 8am – 10pm<br/>Sunday: 9am – 7pm</p>
+      </div>
+      <div>
+        <p class="footer-col-label">Follow Us</p>
+        <p class="footer-links">
+          <a href="#">Facebook</a>
+          <a href="#">Instagram</a>
+          <a href="#">Twitter</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-rule"></div>
+    <p class="footer-copy">&copy; 2026 The Daily Grind. All rights reserved. &nbsp;|&nbsp; ADT2509155</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/members-club.js"></script>
+<div id="member-success-overlay" class="receipt-overlay">
+  <div class="receipt-box" style="text-align: center; border-top: 5px solid var(--gold);">
+    <div class="tier-icon" style="font-size: 50px; margin-bottom: 10px;">✨</div>
+    <h2 class="receipt-title">Welcome to the Club!</h2>
+    <p style="margin: 20px 0; font-family: 'Lato', sans-serif;">Your registration was successful. Our team will send membership details to your email within 24 hours.</p>
+    <div class="gold-bar"></div>
+    <button type="button" onclick="document.getElementById('member-success-overlay').classList.remove('open')" class="receipt-close-btn">Great, Thanks!</button>
+  </div>
+</div>
+</body>
+</html>
