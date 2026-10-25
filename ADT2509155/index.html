@@ -226,16 +226,6 @@
     .pill:hover { background: var(--gold); color: var(--brown-dark); border-color: var(--gold); }
     .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
 
-    /* ── Staggered card reveal animations ── */
-    @keyframes cardReveal {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .join-card { opacity: 0; animation: cardReveal 0.7s ease forwards; }
-    .join-card:nth-child(1) { animation-delay: 0.1s; }
-    .join-card:nth-child(2) { animation-delay: 0.25s; }
-    .join-card:nth-child(3) { animation-delay: 0.4s; }
-
     /* ── Scroll-triggered fade (JS controlled) ── */
     .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -754,23 +744,26 @@
 
     <!-- Join Us cards -->
     <div class="join-cards">
-      <div class="join-card">
-        <div class="join-card-icon">☕</div>
-        <div class="join-card-title"><a href="loyaltyprogram.html" class="active">Loyalty Programme</a></div>
+      <a href="loyaltyprogram.html" class="join-card" aria-labelledby="loyalty-card-title">
+        <span class="join-card-icon" aria-hidden="true">☕</span>
+        <h3 class="join-card-title" id="loyalty-card-title">Loyalty Programme</h3>
         <p class="join-card-body">Earn a stamp with every visit and enjoy your 10th coffee completely on us. Join thousands of daily regulars.</p>
-      </div>
+        <span class="join-card-action">See how it works</span>
+      </a>
 
-      <div class="join-card">
-        <div class="join-card-icon">🌿</div>
-        <div class="join-card-title"><a href="membersclub.html" class="active">Members Club</a></div>
+      <a href="membersclub.html" class="join-card" aria-labelledby="members-card-title">
+        <span class="join-card-icon" aria-hidden="true">🌿</span>
+        <h3 class="join-card-title" id="members-card-title">Members Club</h3>
         <p class="join-card-body">Sign up as a member and unlock exclusive promotions, early access to seasonal menus, and birthday perks.</p>
-      </div>
+        <span class="join-card-action">View membership benefits</span>
+      </a>
 
-      <div class="join-card">
-        <div class="join-card-icon">👩‍🍳</div>
-        <div class="join-card-title"><a href="workwithus.html" class="active">Work With Us</a></div>
+      <a href="workwithus.html" class="join-card" aria-labelledby="careers-card-title">
+        <span class="join-card-icon" aria-hidden="true">👩‍🍳</span>
+        <h3 class="join-card-title" id="careers-card-title">Work With Us</h3>
         <p class="join-card-body">We're always on the lookout for passionate baristas, kitchen staff, and front-of-house talent. Drop us a message!</p>
-      </div>
+        <span class="join-card-action">Find your next role</span>
+      </a>
     </div>
 
     <!-- inline CSS style 2 of 3: join CTA margin -->
